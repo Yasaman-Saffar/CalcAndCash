@@ -1,0 +1,117 @@
+{% extends "staff_base.html" %}
+{% load static %}
+
+{% block page_title %}Bank | Questions{% endblock page_title %}
+
+{% block page_content %}
+<div class="container py-4">
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark">Questions Management</h3>
+        <a class="btn btn-primary rounded-pill px-4" href="{% url "add-new-question" %}">
+            <i class="bi bi-plus-lg me-1"></i> Add Question
+        </a>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row justify-content-center g-3 mb-5">
+        {% for d in difficulties %}
+        <div class="col-md-2 col-sm-6">
+            <div class="card h-100 border-1 shadow rounded-4 p-3">
+                <div class="card-body">
+                    <h6 class="text-muted fw-bold text-uppercase mb-3">{{ d }}</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small">Total</span>
+                        <span class="fw-bold">{{ d.total_questions }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="small">In Bank</span>
+                        <span class="fw-bold">{{ d.unsold_questions }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Filter & Search Bar -->
+    <div class="row mb-4 align-items-center g-2">
+        <div class="col-md-8">
+            <form action="{% url "questions" %}" class="d-flex gap-2">
+                <input type="text" name="q" value="{{ request.GET.q }}" class="form-control rounded-pill" placeholder="Search number or prompt...">
+                <button class="btn btn-outline-secondary rounded-pill" type="submit">Search</button>
+                {% if request.GET.q %}
+                    <a href="{% url "questions" %}" class="btn btn-link text-muted">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <div class="dropdown">
+                <button class="btn btn-light border rounded-pill px-4 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Filter Options
+                </button>
+                <form action="{% url "questions" %}" class="dropdown-menu p-3 shadow" style="min-width: 250px;">
+                    <h6 class="dropdown-header">Difficulty</h6>
+                    {% for d in difficulties %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="difficulty" value="{{ d.id }}" {% if d.id|stringformat:"s" in filtered_difficulties %}checked{% endif %}>
+                            <label class="form-check-label">{{ d.difficulty }}</label>
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <h6 class="dropdown-header">Bank Status</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="inBank" value="Yes" {% if in_bank == "Yes" %}checked{% endif %}>
+                        <label class="form-check-label">Available</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="inBank" value="No" {% if in_bank == "No" %}checked{% endif %}>
+                        <label class="form-check-label">Sold</label>
+                    </div>
+                    <button class="btn btn-dark w-100 mt-3 rounded-pill" type="submit">Apply Filters</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">#</th>
+                        <th>Difficulty</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for q in questions %}
+                    <tr>
+                        <td class="ps-4 fw-bold">#{{ q.number }}</td>
+                        <td>{{ q.difficulty }}</td>
+                        <td>
+                            {% if q.has_owner %}
+                                <span class="badge bg-danger-subtle text-danger rounded-pill px-3">Sold</span>
+                            {% else %}
+                                <span class="badge bg-success-subtle text-success rounded-pill px-3">Available</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end pe-4 text-nowrap">
+                            <a href="{% url "question-detail" q.id %}" class="btn btn-sm btn-outline-primary rounded-pill me-2">View</a>
+                            <a href="{% url "edit-question" q.id %}" class="btn btn-sm btn-outline-secondary rounded-pill">Edit</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">No questions found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

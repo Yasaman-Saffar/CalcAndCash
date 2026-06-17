@@ -1,0 +1,63 @@
+<div class="py-4 pb-2">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold text-dark mb-1">Profile Settings</h2>
+
+    {% if request.user.phone %}
+      <div class="text-muted small mt-2">
+        Phone:
+        <span class="fw-semibold">{{ request.user.phone }}</span>
+      </div>
+    {% endif %}
+
+    <div class="mx-auto bg-primary rounded-pill mt-3" style="width:60px;height:4px;"></div>
+  </div>
+
+  <div class="nav-scroller">
+    <ul class="nav nav-tabs flex-nowrap justify-content-center">
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'profile' %}active fw-bold{% endif %}"
+           href="{% url 'profile' %}">
+          Information
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'email' %}active fw-bold{% endif %}"
+           href="{% url 'account_email' %}">
+          Email
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'phone' %}active fw-bold{% endif %}"
+           href="{% url 'account_change_phone' %}">
+          Phone
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link {% if active_tab == 'password' %}active fw-bold{% endif %}"
+           href="{% url 'account_change_password' %}">
+          Password
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+.nav-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nav-scroller .nav {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.nav-scroller::-webkit-scrollbar {
+  display: none;
+}
+</style>

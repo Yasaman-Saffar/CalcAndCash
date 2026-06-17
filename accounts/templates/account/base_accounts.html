@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+  {% block head_title %}{% endblock head_title %}
+{% endblock page_title %}
+
+{% block personal_navbar %}{% endblock personal_navbar %}
+
+{% block page_content %}
+<div class="min-vh-100 d-flex align-items-center py-5 bg-"
+     style="background-color: var(--bs-secondary-bg);">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+
+        <div class="text-center mb-3">
+          <div class="fw-bold fs-4">Calc And Cash</div>
+        </div>
+
+        <div class="card border-0 shadow-lg rounded-4">
+          <div class="card-body p-4 p-md-5">
+            {% block content %}{% endblock content %}
+          </div>
+        </div>
+
+        <div class="text-center mt-3 text-muted small">
+          {% block auth_footer %}{% endblock auth_footer %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock page_content %}
+
+{% block page_scripts %}
+  {% block account_scripts %}{% endblock account_scripts %}
+{% endblock page_scripts %}

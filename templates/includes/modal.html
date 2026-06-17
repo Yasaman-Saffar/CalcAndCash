@@ -1,0 +1,27 @@
+<div class="modal fade" id="globalConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 overflow-hidden">
+            <div class="modal-body p-4 text-center">
+                <div class="mb-3">
+                    <i id="globalModalIcon" class="display-4 text-primary"></i>
+                </div>
+
+                <h4 id="globalModalHeader" class="fw-bold"></h4>
+                <p id="globalModalMessage" class="text-muted"></p>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <form id="globalModalForm" method="post" class="w-100">
+                        {% csrf_token %}
+                        <button type="submit" id="globalModalSubmit" class="btn btn-primary w-100">
+                            Confirm
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

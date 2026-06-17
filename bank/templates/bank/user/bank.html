@@ -1,0 +1,60 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "bank/bank.css" %}">
+{% endblock css_files %}
+
+{% block page_title %}Bank | Marketplace{% endblock page_title %}
+
+{% block player_content %}
+<div class="container py-5">
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark mb-2">Marketplace & Bank</h2>
+        <p class="text-muted">Get what you need to level up and dominate the leaderboard</p>
+        <div class="mx-auto bg-primary rounded-pill mt-3" style="width:70px;height:4px;"></div>
+    </div>
+
+    <!-- Action Cards -->
+    <div class="responsive row g-4 justify-content-center">
+        
+        <!-- Buy Questions -->
+        <div class="col-11 col-md-8 col-xl-5">
+            <div class="card h-100 border-0 shadow-sm hover-card transition-all text-center">
+                <div class="card-body p-4">
+                    <div class="icon-box bg-primary-subtle text-primary rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width:80px;height:80px;">
+                        <i class="bi bi-patch-question-fill fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Buy Questions</h4>
+                    <p class="text-muted small mb-4">
+                        Purchase new questions to earn more points and rise in the leaderboard.
+                    </p>
+                    <a href="{% url 'buy-question' %}" class="btn btn-primary w-100 py-2 fw-bold shadow-sm rounded-3">
+                        View Question Store
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buy Items -->
+        <div class="col-11 col-md-8 col-xl-5">
+            <div class="card h-100 border-0 shadow-sm hover-card transition-all text-center">
+                <div class="card-body p-4">
+                    <div class="icon-box bg-info-subtle text-info rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center" style="width:80px;height:80px;">
+                        <i class="bi bi-bag-check-fill fs-1"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Buy Items</h4>
+                    <p class="text-muted small mb-4">
+                        Grab power-ups and tools to strengthen your gameplay and manage resources better.
+                    </p>
+                    <a href="{% url 'items-user' %}" class="btn btn-info w-100 py-2 fw-bold text-white shadow-sm rounded-3">
+                        Go to Item Store
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock player_content %}

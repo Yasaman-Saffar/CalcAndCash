@@ -1,0 +1,25 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your Email Address" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center">
+    <div class="mb-3">
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary-subtle text-primary"
+            style="width: 72px; height: 72px;">
+        <i class="bi bi-envelope-check fs-2"></i>
+      </span>
+    </div>
+
+    <h1 class="h4 fw-bold mb-2">{% trans "Verify Your Email Address" %}</h1>
+
+    <p class="text-muted small mb-0">
+      {% blocktrans %}
+        We have sent an email to you for verification. Follow the link provided to finalize the signup process.
+        If you do not see the verification email in your main inbox, check your spam folder.
+        Please contact us if you do not receive the verification email within a few minutes.
+      {% endblocktrans %}
+    </p>
+  </div>
+{% endblock content %}

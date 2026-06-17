@@ -1,0 +1,113 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block page_title %}Bank | Buy New Question{% endblock page_title %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "bank/buy_question.css" %}">
+{% endblock css_files %}
+
+{% block player_content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark">Question Store</h2>
+        <p class="text-muted">Invest your points to unlock new challenges and earn bigger rewards!</p>
+        <div class="mx-auto bg-primary rounded-pill mt-3" style="width:70px;height:4px;"></div>
+    </div>
+
+    <!-- Levels Grid -->
+    <div class="row g-4 justify-content-center">
+        {% if levels %}
+            {% with total=levels|length|add:"-1" %}
+            {% for level in levels %}
+            <div class="col-11 col-md-8 col-xl-5">
+                <div
+                    class="card h-100 border-0 shadow-sm hover-card transition-all position-relative overflow-hidden level-card {% if level.unsold_questions == 0 %}is-empty{% endif %}"
+                    style="--index: {{ forloop.counter0 }}; --total: {{ total }};"
+                >
+                    <!-- Stock Badge -->
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge rounded-pill shadow-sm stock-badge">
+                            Stock: {{ level.unsold_questions }}
+                        </span>
+                    </div>
+
+                    <div class="card-body p-4 text-center">
+                        <!-- Difficulty Icon -->
+                        <div class="icon-box rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center level-icon" style="width:70px;height:70px;">
+                            <i class="bi bi-graph-up-arrow fs-2"></i>
+                        </div>
+
+                        <h4 class="fw-bold mb-1 text-capitalize">{{ level.difficulty }}</h4>
+                        <p class="text-muted small mb-4">Level Challenge</p>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <div class="p-2 border rounded-3 bg-light">
+                                    <div class="text-muted x-small text-uppercase">Price</div>
+                                    <div class="fw-bold text-primary">{{ level.level_buy_price }} <i class="bi bi-coin"></i></div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-2 border rounded-3 bg-light">
+                                    <div class="text-muted x-small text-uppercase">Reward</div>
+                                    <div class="fw-bold text-success">{{ level.level_reward_price }} <i class="bi bi-trophy"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button"
+                                class="btn w-100 py-2 fw-bold rounded-3 shadow-sm level-btn"
+                                data-bs-toggle="modal"
+                                data-bs-target="#BuyQModal{{level.id}}"
+                                {% if level.unsold_questions == 0 %}disabled{% endif %}>
+                            {% if level.unsold_questions > 0 %}
+                                Select Question
+                            {% else %}
+                                Out of Stock
+                            {% endif %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation Modal -->
+                <div class="modal fade" id="BuyQModal{{level.id}}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content border-0 rounded-4 overflow-hidden">
+                            <div class="modal-body p-4 text-center">
+                                <div class="mb-3">
+                                    <i class="bi bi-cart-check-fill display-4 text-primary"></i>
+                                </div>
+                                <h4 class="fw-bold">Confirm Purchase</h4>
+                                <p class="text-muted">Buy <strong>{{ level.difficulty }}</strong> question for {{ level.level_buy_price }} points?</p>
+                                
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+                                    <form method="post" class="w-100">
+                                        {% csrf_token %}
+                                        <button type="submit" name="level_id" value="{{ level.id }}" class="btn btn-primary w-100">Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% endwith %}
+        {% else %}
+            <!-- Empty State if no levels exist -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body text-center p-5">
+                    <div class="empty-icon mx-auto mb-3 text-muted">
+                        <i class="bi bi-inbox display-4 text-secondary opacity-25"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2">No Levels Available</h4>
+                    <p class="text-muted mb-0">There are currently no question levels to display.</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock player_content %}

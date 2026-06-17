@@ -1,0 +1,83 @@
+{% extends "player_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block page_title %}Groups | Question {{ group_question.question.number }}{% endblock page_title %}
+
+{% block player_content %}
+<div class="container py-5" style="max-width: 800px;">
+
+    <!-- Back Button -->
+    <div class="mb-4">
+        <a href="{% url 'group-questions' %}" class="text-decoration-none text-muted">
+            <i class="bi bi-arrow-left"></i> Back to Questions
+        </a>
+    </div>
+
+    <!-- Question Header -->
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-dark">Question #{{ group_question.question.number }}</h2>
+        <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1 mt-2">
+            Difficulty: {{ group_question.question.difficulty }}
+        </span>
+    </div>
+
+    <!-- Question Content -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body p-4">
+            <h5 class="fw-bold mb-3">Problem Statement</h5>
+            <div class="text-secondary">
+                {{ group_question.question.question_prompt|safe }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Form & Answer Section -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        {% if group_question.is_solved %}
+            <div class="text-center py-2">
+                <!-- Display Group's Submitted Answer -->
+                <div class="mt-4 p-4 bg-light rounded-4 text-start border-start border-success border-4">
+                    <h6 class="fw-bold text-dark mb-2">
+                        <i class="bi bi-chat-left-text me-2"></i>Your Submitted Answer:
+                    </h6>
+                    <div class="fs-5 text-secondary font-monospace bg-white p-3 rounded-3 border border-light shadow-sm">
+                        <i class="bi bi-check-circle-fill text-success"></i> {{ group_question.group_answer }}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="card-body p-0">
+                <h5 class="fw-bold mb-3">Your Answer</h5>
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">{{ field.label }}</label>
+                            {% render_field field class="form-control rounded-3" %}
+                            
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ field.errors|striptags }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary py-2 px-4 rounded-3 fw-bold shadow-sm">
+                            Submit Answer
+                        </button>
+                        <a class="btn btn-outline-info py-2 px-3 rounded-3 fw-bold" 
+                           href="{% url "trade-question" group_question.id %}">
+                           <i class="bi bi-arrow-left-right"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock player_content %}

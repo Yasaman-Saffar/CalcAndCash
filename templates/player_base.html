@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block page_content %}
+<div class="container-fluid bg-dark">
+  <div class="row g-2">
+
+     <!-- Mobile Navbar -->
+    {% include "includes/contest_bar/mobile_navbar.html" %}
+
+    <!-- Desktop Left Sidebar -->
+    <div class="col-12 col-lg-2 bg-dark vh-100 sticky-top p-4 border-secondary d-none d-lg-block"
+        style="min-width: 250px;">
+      {% include "includes/contest_bar/desktop_sidebar.html" %}
+    </div>
+
+
+    <div class="col-12 col-lg bg-light rounded-5 my-2 my-lg-4" style="height: calc(100vh - 1rem); min-width: 410px; overflow-y: auto;">
+      {% block player_content %}{% endblock player_content %}
+    </div>
+
+    <div class="col-12 col-lg-3 vh-100 sticky-top p-3 d-none d-lg-block"
+      style="min-width: 300px; overflow-y: auto;">
+      {% include "leaderboard/leaderboard.html" %}
+    </div> 
+</div>
+</div> 
+{% endblock page_content %}
+
+
+{% block page_scripts %}
+  <script type="module" src="{% static 'includes/js/timer.js' %}"></script>
+  {% block player_scripts %}{% endblock player_scripts %}
+{% endblock page_scripts %}

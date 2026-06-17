@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}
+  {% block head_title %}{% endblock head_title %}
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="min-vh-100" style="background-color: var(--bs-secondary-bg);">
+
+  <div class="sticky-top border-bottom"
+       style="background-color: var(--bs-secondary-bg); z-index: 1020;">
+    <div class="container">
+      {% block settings_tabs %}{% endblock settings_tabs %}
+    </div>
+  </div>
+
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+
+        <div class="card border-0 shadow-lg rounded-4">
+          <div class="card-body p-4 p-md-5">
+            {% block content %}{% endblock content %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock page_content %}
+
+{% block page_scripts %}
+  {% block account_scripts %}{% endblock account_scripts %}
+{% endblock page_scripts %}

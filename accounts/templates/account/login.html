@@ -1,0 +1,84 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n %}
+{% load account %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% trans "Sign In" %}</h1>
+    <div class="text-muted small">{% trans "Welcome back. Please enter your phone and password." %}</div>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <p class="text-muted small mb-3">
+    {% url 'account_signup' as signup_url %}
+    {% blocktranslate %}If you have not created an account yet, then please <a class="link-primary fw-semibold text-decoration-none" href="{{ signup_url }}">sign up</a> first.{% endblocktranslate %}
+  </p>
+
+  {% url 'account_login' as login_url %}
+  <form method="post" action="{{ login_url }}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {# phone (with login) #}
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.login.id_for_label }}">
+        {% trans "Phone" %}
+      </label>
+      {% render_field form.login class+="form-control rounded-4" placeholder="09..." autocomplete="username" %}
+      {% if form.login.errors %}
+        <div class="invalid-feedback d-block">{{ form.login.errors|striptags }}</div>
+      {% endif %}
+    </div>
+
+    {# password #}
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.password.id_for_label }}">
+        {% trans "Password" %}
+      </label>
+      {% render_field form.password class+="form-control rounded-4" placeholder="----" autocomplete="current-password" %}
+      {% if form.password.errors %}
+        <div class="invalid-feedback d-block">{{ form.password.errors|striptags }}</div>
+      {% endif %}
+    </div>
+
+    {# remember #}
+    {% if form.remember %}
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="form-check">
+          {% render_field form.remember class+="form-check-input" %}
+          <label class="form-check-label small text-muted" for="{{ form.remember.id_for_label }}">
+            {% trans "Remember me" %}
+          </label>
+        </div>
+
+        <a class="small link-secondary text-decoration-none" href="{% url 'account_reset_password' %}">
+          {% trans "Forgot password?" %}
+        </a>
+      </div>
+    {% else %}
+      <div class="text-end">
+        <a class="small link-secondary text-decoration-none" href="{% url 'account_reset_password' %}">
+          {% trans "Forgot password?" %}
+        </a>
+      </div>
+    {% endif %}
+
+    {{ redirect_field }}
+
+      <button type="submit" class="btn btn-primary rounded-4 fw-semibold">
+        {% trans "Sign In" %}
+      </button>
+
+      <a type="button" class="btn btn-info rounded-4 fw-semibold text-light" href="{% url "account_request_login_code" %}">
+        {% trans "Login with OTP" %}
+      </a>
+
+  </form>
+{% endblock content %}

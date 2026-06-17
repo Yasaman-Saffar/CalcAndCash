@@ -1,0 +1,55 @@
+/* Base palette */
+:root{
+    --color-blue: hsl(181, 70%, 50%);
+    --color-yellow: hsl(49, 100%, 60%);
+    --color-red: hsl(356, 100%, 40%);
+    --empty-gray: #929aa1;
+}
+
+/* Hover card effect */
+.hover-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0,0,0,0.05) !important;
+    border-radius: 1.25rem !important;
+}
+.hover-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+}
+
+.x-small { font-size: 0.65rem; letter-spacing: 0.5px; }
+.icon-box i { line-height: 0; }
+.modal-content { border-radius: 1.5rem; }
+
+/* Dynamic color logic */
+.level-card{
+    --safe-total: max(var(--total), 1);
+    --ratio: calc(var(--index) / var(--safe-total));
+    --dynamic-color: color-mix(in srgb,
+        color-mix(in srgb, var(--color-blue), var(--color-yellow) calc(var(--ratio) * 200%)),
+        var(--color-red) calc((var(--ratio) - 0.5) * 200%)
+    );
+}
+
+.level-icon{
+    background: color-mix(in srgb, var(--dynamic-color), white 80%);
+    color: var(--dynamic-color);
+    border: 1px solid rgba(0,0,0,0.06);
+}
+
+.stock-badge{ background-color: var(--dynamic-color); color: #fff; }
+.level-card.is-empty .stock-badge{
+    background-color: var(--empty-gray) !important;
+    color: #fff !important;
+}
+
+.level-btn{ background: var(--dynamic-color); color: #fff; border: none; }
+.level-btn:hover{ filter: brightness(0.95); color: #000000; }
+
+/* Keep color but reduce opacity for disabled state */
+.level-btn:disabled {
+    background: var(--dynamic-color) !important;
+    opacity: 0.6 !important;
+    color: #fff !important;
+    cursor: not-allowed;
+}

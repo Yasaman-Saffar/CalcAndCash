@@ -1,0 +1,12 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block page_title %}Leaderboard{% endblock page_title %}
+
+{% block player_content %}
+
+<div class="p-3 rounded-5" style="max-height:800px; overflow-y:auto;">
+    {% include "leaderboard/leaderboard.html" %}
+    </div>
+
+{% endblock player_content %}

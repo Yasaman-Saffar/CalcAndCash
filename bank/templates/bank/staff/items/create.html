@@ -1,0 +1,93 @@
+{% extends "staff_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block page_title %}Bank | Add New Item{% endblock page_title %}
+
+{% block page_content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+
+            <!-- Header & Back Button -->
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <div>
+                    <h1 class="h3 fw-bold mb-0">Add New Item</h1>
+                    <p class="text-muted small mb-0">Create a new entry for the item bank.</p>
+                </div>
+                <a href="{% url "items-staff" %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                    <i class="bi bi-arrow-left me-1"></i> Back
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger rounded-3">
+                                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="row g-4">
+
+                            {% for field in form %}
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">{{ field.label }}</label>
+
+                                    {% if field.field.widget.input_type == "file" %}
+                                        {% render_field field class="form-control rounded-3" %}
+                                    {% elif field.field.widget.input_type == "checkbox" %}
+                                        <div class="form-check">
+                                            {% render_field field class="form-check-input" %}
+                                            <label class="form-check-label">{{ field.help_text }}</label>
+                                        </div>
+                                    {% elif field.field.widget.input_type == "select" %}
+                                        {% render_field field class="form-select rounded-3 py-2" %}
+                                    {% else %}
+                                        {% render_field field class="form-control rounded-3 py-2" placeholder=field.label %}
+                                    {% endif %}
+
+                                    {% if field.errors %}
+                                        <div class="text-danger small mt-1">{{ field.errors|first }}</div>
+                                    {% endif %}
+
+                                    {% if field.help_text and field.field.widget.input_type != "checkbox" %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+
+                            <!-- Action Buttons -->
+                            <div class="col-12 pt-3">
+                                <hr class="text-muted opacity-25 mb-4">
+                                <div class="d-flex gap-2 justify-content-end">
+                                    <a href="javascript:history.back()" class="btn btn-light rounded-pill px-4">Cancel</a>
+                                    <button type="submit" class="btn btn-success rounded-pill px-5 fw-bold">
+                                        <i class="bi bi-plus-circle me-2"></i>Add Item
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Hint Card -->
+            <div class="mt-4 p-3 bg-light rounded-4 border-0">
+                <div class="d-flex gap-2">
+                    <i class="bi bi-info-circle text-primary"></i>
+                    <p class="small text-muted mb-0">
+                        <strong>Tip:</strong> Upload a clear image and fill in the item details carefully before submitting.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock page_content %}

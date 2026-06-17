@@ -1,0 +1,62 @@
+{% if request.user.is_superuser %}
+    <button class="btn btn-sm btn-danger d-none"
+            id="start_btn" 
+            data-url="{% url "contest-start" %}"
+            data-csrf="{{ csrf_token }}">
+            <i class="bi bi-play-fill"></i>
+    </button>
+
+    <div class="d-none" id="pause_wrapper">
+        <div class="btn-group btn-group-sm"  role="group" aria-label="Basic mixed styles example">
+            <button class="btn btn-light"
+                    id="pause_btn"
+                    data-url="{% url "contest-pause" %}"
+                    data-csrf="{{ csrf_token }}">
+                    <i class="bi bi-pause-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-info"
+                    id="fFinish_btn_p" 
+                    data-url="{% url "contest-force-finish" %}"
+                    data-csrf="{{ csrf_token }}">
+                    <i class="bi bi-stop-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="d-none" id="resume_wrapper">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Basic mixed styles example">
+            <button class="btn btn-light"
+                    id="resume_btn"
+                    data-url="{% url "contest-resume" %}"
+                    data-csrf="{{ csrf_token }}">
+                    <i class="bi bi-play-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-info"
+                    id="fFinish_btn_r" 
+                    data-url="{% url "contest-force-finish" %}"
+                    data-csrf="{{ csrf_token }}">
+                    <i class="bi bi-stop-fill"></i>
+            </button>
+        </div>
+    </div>
+
+    <button class="btn btn-sm btn-warning d-none"
+            id="reset_btn" 
+            data-url="{% url "contest-reset" %}"
+            data-csrf="{{ csrf_token }}">
+            Reset
+    </button>
+{% endif %}
+
+<div id="contest-timer" class="text-white bg-black bg-opacity-25 border border-secondary p-2 rounded">
+    <span class="timer-display">--:--:--</span>
+    {% if contest_state == "Paused" %}
+        <i class="bi bi-pause-circle"></i>
+    {% elif contest_state == "Running" %}
+        <i class="bi bi-hourglass-split"></i>
+    {% elif contest_state == "Not-Started" %}
+        <i class="bi bi-hourglass-top"></i>
+    {% elif contest_state == "Finished" %}
+        <i class="bi bi-hourglass-bottom"></i>
+    {% endif %}
+</div>

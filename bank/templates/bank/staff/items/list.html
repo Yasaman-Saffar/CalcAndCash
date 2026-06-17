@@ -1,0 +1,175 @@
+{% extends "staff_base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "bank/items.css" %}">
+{% endblock css_files %}
+
+{% block page_title %}Bank | Items{% endblock page_title %}
+
+{% block page_content %}
+<div class="container py-4">
+
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold text-dark mb-0">Items Management</h3>
+    </div>
+      <a class="btn btn-primary rounded-pill px-4" href="{% url "add-new-item" %}">
+        <i class="bi bi-plus-lg me-1"></i> Add Item
+      </a>
+  </div>
+
+  <!-- Filter & Search Bar -->
+  <div class="row mb-4 align-items-center g-2">
+    <div class="col-md-8">
+      <form action="{% url "items-staff" %}" class="d-flex gap-2">
+        <input
+          type="text"
+          name="q"
+          value="{{ request.GET.q }}"
+          class="form-control rounded-pill"
+          placeholder="Search name...">
+        <button class="btn btn-outline-secondary rounded-pill" type="submit">Search</button>
+        {% if request.GET.q %}
+          <a href="{% url "items-staff" %}" class="btn btn-link text-muted">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+
+    <div class="col-md-4 text-md-end">
+      <div class="dropdown">
+        <button class="btn btn-light border rounded-pill px-4 dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Filter Options
+        </button>
+
+        <form action="{% url "items-staff" %}" class="dropdown-menu p-3 shadow" style="min-width: 280px;">
+          <h6 class="dropdown-header">Max Price</h6>
+
+          {# keep q when filtering #}
+          {% if request.GET.q %}
+            <input type="hidden" name="q" value="{{ request.GET.q }}">
+          {% endif %}
+
+          <label for="range4" class="form-label small mb-1">Less than or equal to:</label>
+          <input
+            type="range"
+            class="form-range"
+            name="selected-price"
+            min="{{ min_price }}"
+            max="{{ max_price }}"
+            value="{{ selected_price|default:max_price }}"
+            id="range4"
+            oninput="rangeValue.value=this.value">
+          <output for="range4" id="rangeValue">{{ selected_price|default:max_price }}</output>
+
+          <hr>
+
+          <h6 class="dropdown-header">Bank Status</h6>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="inBank" value="Yes" {% if in_bank == "Yes" %}checked{% endif %}>
+            <label class="form-check-label">Available</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="inBank" value="No" {% if in_bank == "No" %}checked{% endif %}>
+            <label class="form-check-label">Sold</label>
+          </div>
+
+          <button class="btn btn-dark w-100 mt-3 rounded-pill" type="submit">Apply Filters</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="table-responsive ">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Item</th>
+            <th>Base Price</th>
+            <th>Current Price</th>
+            <th>Status</th>
+            <th class="text-end pe-4">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in items %}
+            <tr>
+              <td class="ps-4">
+                <div class="d-flex align-items-center gap-3">
+                  {% if i.photo %}
+                    <img src="{{ i.photo.url }}"
+                         alt="{{ i.name }}"
+                         class="rounded-3 border"
+                         style="width:44px;height:44px;object-fit:cover;">
+                  {% else %}
+                    <div class="rounded-3 border bg-light d-flex align-items-center justify-content-center"
+                         style="width:44px;height:44px;">
+                      <i class="bi bi-image text-muted"></i>
+                    </div>
+                  {% endif %}
+
+                  <div>
+                    <div class="fw-semibold">{{ i.name }}</div>
+                    <div class="text-muted small">ID: {{ i.id }}</div>
+                  </div>
+                </div>
+              </td>
+
+              <td>{{ i.base_price }}π</td>
+              <td class="fw-semibold">{{ i.current_price }}π</td>
+
+              <td>
+                {% if i.has_owner %}
+                  <span class="badge bg-danger-subtle text-danger rounded-pill px-3">Sold</span>
+                {% else %}
+                  <span class="badge bg-success-subtle text-success rounded-pill px-3">Available</span>
+                {% endif %}
+              </td>
+
+              <td class="text-end pe-4 text-nowrap">
+                <a href="{% url "edit-item" i.id %}" class="btn btn-sm btn-outline-secondary rounded-pill me-2">
+                  Edit
+                </a>
+
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger rounded-pill"
+                  data-bs-toggle="modal"
+                  data-bs-target="#globalConfirmModal"
+                  data-modal-icon="bi bi-trash-fill"
+                  data-modal-color="danger"
+                  data-modal-header="Confirm Deletion"
+                  data-modal-message="Are you sure you want to delete the {{ i.name }}?"
+                  data-modal-action="{% url "delete-item" i.id %}">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-5 text-muted">No items found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock page_content %}
+
+{% block staff_scripts %}
+<script>
+  const rangeInput = document.getElementById('range4');
+  const rangeOutput = document.getElementById('rangeValue');
+  if (rangeInput && rangeOutput) {
+    rangeOutput.textContent = rangeInput.value;
+    rangeInput.addEventListener('input', function () {
+      rangeOutput.textContent = this.value;
+    });
+  }
+</script>
+{% endblock staff_scripts %}

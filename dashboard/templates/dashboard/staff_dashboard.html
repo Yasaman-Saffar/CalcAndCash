@@ -1,0 +1,142 @@
+{% extends "staff_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "dashboard/s_dashboard.css" %}">
+{% endblock css_files %}
+
+{% block page_title %}Dashboard{% endblock page_title %}
+
+{% block page_content %}
+<div class="container py-5" style="max-width: 1100px;">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        {% if request.user.profile_username %}
+            <h2 class="fw-bold mb-2">Welcome back, {{ request.user.profile.profile_username }}!</h2>
+        {% else %}
+            <h2 class="fw-bold mb-2">Welcome to Calc And Cash!</h2>
+        {% endif %}
+        <p class="text-muted mb-0">Manage contest data and system settings from here.</p>
+    </div>
+
+    <!-- Top Actions -->
+    <div class="row g-4 justify-content-center mb-5">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="{% url 'questions' %}" class="text-decoration-none">
+                <div class="dashboard-box action-box h-100">
+                    <div class="icon-wrap text-success">
+                        <i class="bi bi-question-diamond"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Questions</h5>
+                    <p class="text-muted small mb-0">Manage all contest questions</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="{% url 'items-staff' %}" class="text-decoration-none">
+                <div class="dashboard-box action-box h-100">
+                    <div class="icon-wrap text-danger">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Items</h5>
+                    <p class="text-muted small mb-0">Inventory and shop management</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="{% url 'groups' %}" class="text-decoration-none">
+                <div class="dashboard-box action-box h-100">
+                    <div class="icon-wrap text-primary">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Groups</h5>
+                    <p class="text-muted small mb-0">View and manage all groups</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <a href="{% url 'profile' %}" class="text-decoration-none">
+                <div class="dashboard-box action-box h-100">
+                    <div class="icon-wrap text-dark">
+                        <i class="bi bi-person-badge"></i>
+                    </div>
+                    <h5 class="fw-bold text-dark mb-2">Profile</h5>
+                    <p class="text-muted small mb-0">User management settings</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+            <div>
+                <h5 class="fw-bold mb-1">Overview</h5>
+                <p class="text-muted small mb-0">Quick summary of groups, users, and event settings</p>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="stat-box border border-2 border-opacity-50 border-info">
+                    <span class="stat-label"> Contest Duration</span>
+                    <h3 class="stat-value">
+                        <i class="bi text-info text-opacity-50 bi-clock-history"></i>
+                        {% if contest_duration %}
+                            {{ contest_duration }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </h3>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="stat-box border border-2 border-opacity-50 border-danger">
+                    <span class="stat-label">Total Groups</span>
+                    <h3 class="stat-value">
+                        <i class="bi text-danger text-opacity-50 bi-people"></i>
+                        {{ total_groups|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4">
+                <div class="stat-box border border-2 border-opacity-50 border-success">
+                    <span class="stat-label">Total Users</span>
+                    <h3 class="stat-value">
+                        <i class="bi text-success text-opacity-50 bi-person"></i>
+                        {{ total_users|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-6">
+                <div class="stat-box border border-2 border-opacity-50 border-warning">
+                    <span class="stat-label">Inflation Events</span>
+                    <h3 class="stat-value">
+                        <i class="bi text-warning text-opacity-50 bi bi-graph-up-arrow"></i>
+                        {{ total_inflations|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-6">
+                <div class="stat-box border border-2 border-opacity-50 border-primary">
+                    <span class="stat-label">Interest Events</span>
+                    <h3 class="stat-value">
+                        <i class="bi text-primary text-opacity-50 bi bi-cash-coin"></i>
+                        {{ total_interests|default:"0" }}
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock page_content %}

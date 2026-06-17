@@ -1,0 +1,39 @@
+<!-- Notifications | Setting | Bank -->
+<div class="d-flex justify-content-center gap-2 mt-5">
+
+    <!--Notifs-->
+    <a class="btn btn-outline-warning position-relative" href="{% url "group-notifs" %}">
+    <i class="bi bi-bell"></i>
+    {% if has_unread_group_notifications %}
+        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+    {% endif %}
+    </a>
+
+    <!--Group Setting-->
+    {% if request.user.profile.memberships.is_leader %}
+    <a class="btn btn-outline-secondary" data-bs-toggle="tooltip" data-bs-title="Group Setting"
+    href="{% url "group-settings" %}">
+        <i class="bi bi-gear"></i>
+    </a>
+    {% endif %}
+
+    <!--Bank-->
+    <a class="btn btn-outline-light" data-bs-toggle="tooltip" data-bs-title="Bank"
+    href="{% url "bank-marketplace" %}">
+        <i class="bi bi-bank"></i>
+    </a>
+
+</div>
+
+<!-- Links -->
+<div class="d-grid gap-2">
+    <a class="btn btn-outline-light" href="{% url "group-dashboard" %}">
+    <i class="bi bi-speedometer2 me-1"></i> Dashboard
+    </a>
+    <a class="btn btn-outline-light" href="{% url "group-questions" %}">
+    <i class="bi bi-question-circle me-1"></i> Questions
+    </a>
+    <a class="btn btn-outline-light" href="{% url "group-items" %}">
+    <i class="bi bi-bag-check me-1"></i> Items
+    </a>
+</div>

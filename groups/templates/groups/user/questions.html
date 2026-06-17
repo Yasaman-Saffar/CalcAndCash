@@ -1,0 +1,60 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block page_title %}Group | Questions{% endblock page_title %}
+
+{% block player_content %}
+<div class="container py-5" style="max-width: 900px;">
+
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-2 text-dark">Group Questions</h2>
+        <p class="text-muted mb-2">Track your progress and solve challenges</p>
+        <div class="mx-auto bg-primary rounded-pill mt-3" style="width:70px;height:4px;"></div>
+    </div>
+
+    <!-- Section 1: Tabbed layout (mobile/tablet/desktop<=1200px, below xl breakpoint) -->
+    <div class="d-xl-none mb-4">
+        <ul class="nav nav-tabs justify-content-center border-0" id="qTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active fw-bold" id="unsolved-tab" data-bs-toggle="tab" data-bs-target="#unsolved-pane" type="button" role="tab">Unsolved</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-bold" id="solved-tab" data-bs-toggle="tab" data-bs-target="#solved-pane" type="button" role="tab">Solved</button>
+            </li>
+        </ul>
+        
+        <div class="tab-content mt-3" id="qTabsContent">
+            <!-- Mobile Unsolved Pane -->
+            <div class="tab-pane fade show active" id="unsolved-pane" role="tabpanel">
+                {% include "groups/partials/_question_list.html" with questions=unsolved_qs type="unsolved" %}
+            </div>
+            <!-- Mobile Solved Pane -->
+            <div class="tab-pane fade" id="solved-pane" role="tabpanel">
+                {% include "groups/partials/_question_list.html" with questions=solved_qs type="solved" %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Two-column grid layout (xl and up) -->
+    <div class="row g-4 d-none d-xl-flex">
+        <!-- Unsolved Column -->
+        <div class="col-6">
+            <h4 class="fw-bold mb-3 text-info">
+                <i class="bi bi-hourglass-split me-2"></i>Unsolved
+                <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1 mb-2">{{num_of_solved}}</span>
+            </h4>
+            {% include "groups/partials/_question_list.html" with questions=unsolved_qs type="unsolved" %}
+        </div>
+        <!-- Solved Column -->
+        <div class="col-6">
+            <h4 class="fw-bold mb-3 text-success">
+                <i class="bi bi-check-circle-fill me-2"></i>Solved
+                <span class="badge bg-info-subtle text-success rounded-pill px-3 py-1 mb-2">{{num_of_unsolved}}</span>
+            </h4>
+            {% include "groups/partials/_question_list.html" with questions=solved_qs type="solved" %}
+        </div>
+    </div>
+
+</div>
+{% endblock player_content %}

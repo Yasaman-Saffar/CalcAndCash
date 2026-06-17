@@ -1,0 +1,18 @@
+/* .tr-animating {
+    transition: transform 0.4s ease;
+} */
+
+/* table tbody tr {
+    transition: transform 0.4s ease;
+} */
+
+.table-container {
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+.table { margin-bottom: 0; }
+
+#leaderboard-body tr {
+    will-change: transform;
+}

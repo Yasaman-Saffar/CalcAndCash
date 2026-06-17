@@ -1,0 +1,10 @@
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, .1) !important;
+}
+.icon-box i {
+    line-height: 0;
+}

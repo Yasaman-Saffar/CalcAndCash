@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Dashboard{% endblock page_title %}
+{% block navbar %}{% endblock navbar %}
+
+{% block page_content %}
+<div class="container py-5" style="max-width: 900px;">
+
+  <!-- Header -->
+  <div class="text-center mb-5">
+    {% if request.user.profile.profile_username %}
+        <h2 class="fw-bold mb-2">Welcome back, {{ request.user.profile.profile_username }}!</h2>
+    {% else %}
+        <h2 class="fw-bold mb-2">Welcome to Calc And Cash!</h2>
+    {% endif %}
+    <p class="text-muted mb-0">Your control center for this contest.</p>
+  </div>
+
+  <!-- Section: Account Info -->
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-person-circle me-2"></i>Account Details</h6>
+            <div class="d-flex justify-content-between py-2 border-bottom">
+                <span class="text-muted">Username</span>
+                <span class="fw-semibold">{{ request.user.profile.profile_username }}</span>
+            </div>
+            <div class="d-flex justify-content-between py-2">
+                <span class="text-muted">Phone</span>
+                <span class="fw-semibold">{{ request.user.phone }}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <h6 class="fw-bold text-secondary mb-3"><i class="bi bi-gear me-2"></i>Settings</h6>
+            <div class="d-grid gap-2">
+                <a href="{% url 'profile' %}" class="btn btn-light text-start rounded-3">Profile</a>
+                <a href="{% url 'account_email' %}" class="btn btn-light text-start rounded-3">Manage Email</a>
+                <a href="{% url 'account_change_phone' %}" class="btn btn-light text-start rounded-3">Change Phone</a>
+                <a href="{% url 'account_change_password' %}" class="btn btn-light text-start rounded-3">Change Password</a>
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- Section: Group Status -->
+  <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+    {% if user_group %}
+        <!-- Group Information -->
+        <div class="d-flex align-items-center justify-content-between mb-2">
+            <div>
+                <h5 class="fw-bold text-primary mb-1">Your Team</h5>
+                <span class="badge bg-primary-subtle text-primary rounded-pill px-3">{{ user_group.name }}</span>
+            </div>
+            <div class="text-md-end">
+                <p class="text-muted small fw-semibold text-uppercase mb-1">Created At</p>
+                <div class="fw-medium">{{ user_group.created_at|date:"Y/m/d" }}</div>
+            </div>
+            <a href="{% url 'group-dashboard' %}" class="btn btn-outline-primary rounded-4">Start Challenging!</a>
+        </div>
+        
+        <hr class="my-2 opacity-25">
+        
+        <div class="row g-3">
+            <div class="col-12">
+                <p class="text-muted small fw-semibold text-uppercase mb-2">Members</p>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for member in user_group.all_members %}
+                        <div class="px-3 py-2 bg-light rounded-3 border d-flex align-items-center gap-2">
+                            <i class="bi bi-person-fill text-secondary"></i>
+                            <span class="fw-medium text-dark">{{ member.profile_username }}</span>
+                            {% if member.memberships.is_leader == True %}<span class="badge bg-danger text-dark small rounded-pill">Leader</span>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- No Group -->
+        <div class="text-center py-4">
+            <div class="mb-3">
+                <i class="bi bi-people-fill text-muted" style="font-size: 3rem;"></i>
+            </div>
+            <h5 class="fw-bold text-dark">No Group Yet</h5>
+            <p class="text-muted mb-4">Create a team now to participate in the contest and start solving challenges.</p>
+            <a href="{% url 'add_group' %}" class="btn btn-primary fw-semibold rounded-4 px-4">
+                <i class="bi bi-plus-lg me-2"></i>Create New Group
+            </a>
+        </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock page_content %}

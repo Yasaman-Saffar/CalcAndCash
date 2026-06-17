@@ -1,0 +1,54 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n allauth account widget_tweaks %}
+
+{% block head_title %}{% translate "Email Verification" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% translate "Enter Email Verification Code" %}</h1>
+    <div class="text-muted small">
+      {% blocktrans %}
+        We sent a verification code to your email address.
+      {% endblocktrans %}
+    </div>
+  </div>
+
+  <div class="alert alert-info rounded-4 small text-center">
+    <a class="fw-semibold text-decoration-none" href="mailto:{{ email }}">{{ email }}</a>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  {% url 'account_email_verification_sent' as action_url %}
+  <form method="post" action="{{ action_url }}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="{{ field.id_for_label }}">
+          {{ field.label }}
+        </label>
+        {% render_field field class+="form-control rounded-4 text-center" autocomplete="one-time-code" %}
+        {% if field.errors %}
+          <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {{ redirect_field }}
+
+    <button type="submit" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% translate "Confirm" %}
+    </button>
+  </form>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'account_email' %}" class="small link-secondary text-decoration-none">
+      {% translate "Use a different email address" %}
+    </a>
+  </div>
+{% endblock content %}

@@ -1,0 +1,81 @@
+{% extends "account/base_account_settings.html" %}
+{% load static widget_tweaks %}
+
+{% block head_title %}Profile Settings{% endblock head_title %}
+
+{% block settings_tabs %}
+  {% include "dashboard/includes/_profile_tabs.html" with active_tab="profile" %}
+{% endblock settings_tabs %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">Edit Profile</h1>
+    <div class="text-muted small">Update your personal information.</div>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data" class="vstack gap-3">
+    {% csrf_token %}
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.profile_username.id_for_label }}">
+        Username
+      </label>
+      {% render_field form.profile_username class+="form-control rounded-4" %}
+      {% if form.profile_username.errors %}
+        <div class="invalid-feedback d-block">{{ form.profile_username.errors|striptags }}</div>
+      {% endif %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for for="{{ form.first_name.id_for_label }}">
+        First Name
+      </label>
+      {% render_field form.first_name class+="form-control rounded-4" %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.last_name.id_for_label }}">
+        Last Name
+      </label>
+      {% render_field form.last_name class+="form-control rounded-4" %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.national_id.id_for_label }}">
+        National ID
+      </label>
+      {% render_field form.national_id class+="form-control rounded-4" %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.date_of_birth.id_for_label }}">
+        Date of Birth
+      </label>
+      {% render_field form.date_of_birth class+="form-control rounded-4" type="date" %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.gender.id_for_label }}">
+        Gender
+      </label>
+      {% render_field form.gender class+="form-select rounded-4" %}
+    </div>
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.avatar.id_for_label }}">
+        Avatar
+      </label><br>
+      {% render_field form.avatar class+="form-control rounded-4" %}
+    </div>
+
+    <button class="btn btn-primary rounded-4 fw-semibold w-100" type="submit">
+      Save Changes
+    </button>
+  </form>
+{% endblock content %}

@@ -1,0 +1,75 @@
+{% extends "player_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block page_title %}Bank | Trade Question{% endblock page_title %}
+
+{% block player_content %}
+<div class="container py-5" style="max-width: 600px;">
+
+    <!-- Header Section -->
+    <div class="mb-4">
+        <a href="{% url 'group-question' gquestion.id %}" class="text-decoration-none text-muted small">
+            <i class="bi bi-arrow-left"></i> Back to Question
+        </a>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4">
+        <div class="card-body p-0">
+            <h4 class="fw-bold mb-3">Trade Question #{{ gquestion.question.number }}</h4>
+            <p class="text-muted mb-4">
+                <i class="bi bi-patch-question me-1"></i> Level: <strong>{{ gquestion.question.level }}</strong> | 
+                <i class="bi bi-shop me-1"></i> Seller: <strong>{{ group.name }}</strong>
+            </p>
+
+            <form method='post'>
+                {% csrf_token %}
+                
+                <div class="row g-3">
+                    <!-- Buyer Field -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Buyer Group</label>
+                        {% render_field form.buyer class="form-control rounded-3" %}
+                    </div>
+
+                    <!-- OTP Field -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">OTP Code</label>
+                        <div class="input-group">
+                            {% render_field form.otp class="form-control rounded-3" placeholder="Enter OTP" %}
+                            <button class="btn btn-outline-warning" 
+                                    id="otp-btn" 
+                                    type="button" 
+                                    data-url="{% url "otp-request" gquestion.id %}"
+                                    data-csrf="{{ csrf_token }}">
+                                    Request OTP
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Price Field -->
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Consensual Price</label>
+                        {% render_field form.consensual_price class="form-control rounded-3" %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-4 pt-3 border-top">
+                    <button class="btn btn-success w-50 py-2 rounded-3 fw-bold shadow-sm" type="submit">
+                        Confirm Trade
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock player_content %}
+
+{% block player_scripts %}
+    <script>
+        window.otpRemaining = {{ otp_remaining_timeout }};
+    </script>
+    <script type="module" src="{% static "bank/js/otp_request.js" %}"></script>
+{% endblock player_scripts %}

@@ -1,0 +1,73 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% trans "Sign Up" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% trans "Sign Up" %}</h1>
+    <div class="text-muted small">{% trans "Create your account with phone number." %}</div>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <p class="text-muted small mb-3">
+    {% url 'account_login' as login_url %}
+    {% blocktranslate %}Already have an account? Then please <a class="link-primary fw-semibold text-decoration-none" href="{{ login_url }}">sign in</a>.{% endblocktranslate %}
+  </p>
+
+  {% url 'account_signup' as action_url %}
+  <form method="post" action="{{ action_url }}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {# phone #}
+    {% if form.phone %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.phone.id_for_label }}">
+          {% trans "Phone" %}
+        </label>
+        {% render_field form.phone class+="form-control rounded-4" placeholder="09..." autocomplete="username" %}
+        {% if form.phone.errors %}
+          <div class="invalid-feedback d-block">{{ form.phone.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {# password1 #}
+    {% if form.password1 %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.password1.id_for_label }}">
+          {% trans "Password" %}
+        </label>
+        {% render_field form.password1 class+="form-control rounded-4" placeholder="----" autocomplete="new-password" %}
+        {% if form.password1.errors %}
+          <div class="invalid-feedback d-block">{{ form.password1.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {# password2 #}
+    {% if form.password2 %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.password2.id_for_label }}">
+          {% trans "Repeat password" %}
+        </label>
+        {% render_field form.password2 class+="form-control rounded-4" placeholder="----" autocomplete="new-password" %}
+        {% if form.password2.errors %}
+          <div class="invalid-feedback d-block">{{ form.password2.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {{ redirect_field }}
+
+    <button type="submit" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% trans "Create account" %}
+    </button>
+  </form>
+{% endblock content %}

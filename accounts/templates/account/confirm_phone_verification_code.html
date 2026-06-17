@@ -1,0 +1,41 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n %}
+{% load allauth account %}
+{% load widget_tweaks %}
+
+{% block head_title %}{% translate "Phone Verification" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% translate "Enter Phone Verification Code" %}</h1>
+    <div class="text-muted small">
+      {% translate "We sent a verification code to" %}
+      <a class="link-primary text-decoration-none fw-semibold" href="tel:{{ phone }}">{{ phone }}</a>
+    </div>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'account_verify_phone' %}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {% if form.code %}
+      <div>
+        {% render_field form.code class+="form-control rounded-4 text-center" inputmode="numeric" autocomplete="one-time-code" %}
+        {% if form.code.errors %}
+          <div class="invalid-feedback d-block">{{ form.code.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {{ redirect_field }}
+
+    <button type="submit" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% translate "Confirm Phone" %}
+    </button>
+  </form>
+{% endblock content %}

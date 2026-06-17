@@ -1,0 +1,177 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block css_files %}
+<link rel="stylesheet" href="{% static "bank/items.css" %}">
+{% endblock css_files %}
+
+{% block page_title %}Bank | Items{% endblock page_title %}
+
+{% block player_content %}
+<div class="container py-5">
+
+  <!-- Header -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-dark mb-2">Items Store</h2>
+    <p class="text-muted">Buy Smart, Sell Higher, Profit More!</p>
+    <div class="mx-auto bg-primary rounded-pill mt-3" style="width:70px;height:4px;"></div>
+  </div>
+
+  <!-- Search + Filter -->
+  <div class="row g-3 justify-content-center mb-4">
+    <div class="col-12 col-lg-10 col-xxl-7">
+      <form action="{% url "items-user" %}" class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-1">
+          <div class="row g-2 align-items-center">
+            <div class="col">
+              <input type="text" 
+                    name="q" 
+                    value="{{ search_input|default:'' }}"
+                    class="form-control rounded-3" 
+                    placeholder="Search item...">
+            </div>
+            <div class="col-auto d-flex gap-2 d-lg-block">
+              <button class="btn btn-primary rounded-3 px-4" type="submit">
+                <i class="bi bi-search me-1"></i> Search
+              </button>
+
+              {% if request.GET.q %}
+                <a href="{% url "items-user" %}" class="btn btn-light border rounded-3">Clear</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-12 col-lg-10 col-xxl-5">
+      <div class="card border-0 shadow-sm rounded-3 h-100">
+        <div class="card-body p-1">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="fw-bold"><i class="bi bi-funnel me-2"></i>Filters</div>
+            <form action="{% url "items-user" %}" class="d-flex align-items-center gap-2 flex-wrap">
+              {% if request.GET.q %}
+                <input type="hidden" name="q" value="{{ request.GET.q }}">
+              {% endif %}
+
+              <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                  Filter By
+                </button>
+
+                <ul class="dropdown-menu p-3" style="min-width: 18rem;">
+                  <li class="mb-2"><h6 class="dropdown-header px-0">Price Range</h6></li>
+
+                  <label for="range4" class="form-label small mb-1">Less than or equal to:</label>
+                  <input
+                      type="range"
+                      class="form-range"
+                      name="selected-price"
+                      min="{{ min_price }}"
+                      max="{{ max_price }}"
+                      value="{{ selected_price|default:max_price }}"
+                      oninput="rangeValue.value=this.value" id="range4">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <small class="text-muted">0</small>
+                    <output for="range4" id="rangeValue" class="fw-bold">{{ selected_price|default:max_price }}</output>
+                    <small class="text-muted">{{ max_price }}</small>
+                  </div>
+
+                  <hr class="dropdown-divider">
+
+                  <li class="mb-2"><h6 class="dropdown-header px-0">In Bank</h6></li>
+                  <li>
+                    <label class="dropdown-item px-0">
+                      <input class="form-check-input me-2" type="radio" name="inBank" value="Yes"
+                            {% if in_bank == "Yes" %}checked{% endif %}>
+                      Yes
+                    </label>
+                  </li>
+                  <li>
+                    <label class="dropdown-item px-0">
+                      <input class="form-check-input me-2" type="radio" name="inBank" value="No"
+                            {% if in_bank == "No" %}checked{% endif %}>
+                      No
+                    </label>
+                  </li>
+                </ul>
+              </div>
+
+              <button class="btn btn-primary" type="submit">Apply</button>
+              {% if selected_price or in_bank %}
+                <a class="btn btn-outline-secondary" href="{% url "items-user" %}{% if request.GET.q %}?q={{request.GET.q}}{% endif %}">Reset</a>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Items Grid -->
+  <div class="row g-4 justify-content-center">
+    {% for i in items %}
+      <div class="col-11 col-md-6 col-xl-4">
+        <div class="card rounded-4 border-0 shadow hover-card h-100 overflow-hidden">
+        {% if i.photo %}
+          <div class="item-image">
+              <img class="card-img-top {% if i.has_owner %}sold-img{% endif %}"
+                  src="{{ i.photo.url }}" alt="{{ i.name }}">
+              {% if i.has_owner %}
+                <span class="sold-badge">SOLD</span>
+              {% endif %}
+          </div>
+        {% else %}
+          <div class="item-image no-image">
+            <i class="bi bi-image"></i>
+          </div>
+          {% if i.has_owner %}
+            <span class="sold-badge">SOLD</span>
+          {% endif %}
+        {% endif %}
+
+          <div class="card-body p-4 text-center">
+            <h4 class="fw-bold mb-2 item-title">{{ i.name }}</h4>
+
+            <div class="row g-2 mb-3 justify-content-center">
+              <div class="col-8">
+                <div class="mini-stat p-2">
+                <div class="text-muted small text-uppercase">Current Price</div>
+                <div class="fw-bold text-{% if i.has_owner %}secondary{% else %}primary{% endif %}">{{ i.current_price }}π</div>
+                </div>
+              </div>
+            </div>
+
+            {% if not i.has_owner %}
+              <button
+                  type="button"
+                  class="btn btn-outline-primary w-100 fw-bold"
+                  data-bs-toggle="modal"
+                  data-bs-target="#globalConfirmModal"
+                  data-modal-icon="bi bi-cart-check-fill"
+                  data-modal-color="primary"
+                  data-modal-header="Confirm Purchase"
+                  data-modal-message="Are you sure you want to buy <strong>{{ i.name }}</strong>?"
+                  data-modal-action="{% url "buy-item" i.pk %}">
+                <i class="bi bi-cart-plus me-2"></i>Buy Item
+              </button>
+            {% else %}
+              <button type="button" class="btn btn-secondary w-100" disabled>
+                <i class="bi bi-cart-plus me-2"></i>Buy Item
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+        <div class="card border-0 shadow-sm rounded-4">
+          <div class="card-body text-center p-5">
+            <i class="bi bi-inbox display-4 text-secondary opacity-25"></i>
+            <h4 class="fw-bold mt-3 mb-2">No Items Found</h4>
+            <p class="text-muted mb-0">Try changing search or filters.</p>
+          </div>
+        </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock player_content %}

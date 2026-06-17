@@ -1,0 +1,101 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n widget_tweaks %}
+
+{% block head_title %}{% trans "Email Address" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% trans "Email Address" %}</h1>
+    <div class="text-muted small">{% trans "Change or verify your email address." %}</div>
+  </div>
+
+  {% if not emailaddresses %}
+    <div class="alert alert-warning rounded-4">
+      {% include "account/snippets/warn_no_email.html" %}
+    </div>
+  {% endif %}
+
+  {% url 'account_email' as action_url %}
+  <form method="post" action="{{ action_url }}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {% if current_emailaddress %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="current_email">
+          {% translate "Current email" %}
+        </label>
+        <input id="current_email"
+               type="email"
+               class="form-control rounded-4"
+               value="{{ current_emailaddress.email }}"
+               disabled>
+      </div>
+    {% endif %}
+
+    {% if new_emailaddress %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="new_email">
+          {% if not current_emailaddress %}
+            {% translate "Current email" %}
+          {% else %}
+            {% translate "Changing to" %}
+          {% endif %}
+        </label>
+
+        <input id="new_email"
+               type="email"
+               class="form-control rounded-4"
+               value="{{ new_emailaddress.email }}"
+               disabled>
+
+        <div class="alert alert-info rounded-4 small mt-2 mb-0">
+          {% blocktranslate %}
+            Your email address is still pending verification.
+          {% endblocktranslate %}
+
+          <div class="d-grid gap-2 mt-3">
+            <button form="pending-email"
+                    type="submit"
+                    name="action_send"
+                    class="btn btn-outline-secondary rounded-4">
+              {% trans "Re-send Verification" %}
+            </button>
+
+            {% if current_emailaddress %}
+              <button form="pending-email"
+                      type="submit"
+                      name="action_remove"
+                      class="btn btn-outline-danger rounded-4">
+                {% trans "Cancel Change" %}
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    <div>
+      <label class="form-label small fw-semibold text-secondary mb-1" for="{{ form.email.id_for_label }}">
+        {% translate "Change to" %}
+      </label>
+      {% render_field form.email class+="form-control rounded-4" placeholder="you@example.com" autocomplete="email" %}
+      {% if form.email.errors %}
+        <div class="invalid-feedback d-block">{{ form.email.errors|striptags }}</div>
+      {% endif %}
+    </div>
+
+    <button type="submit" name="action_add" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% trans "Change Email" %}
+    </button>
+  </form>
+
+  {% if new_emailaddress %}
+    <form style="display: none"
+          id="pending-email"
+          method="post"
+          action="{% url 'account_email' %}">
+      {% csrf_token %}
+      <input type="hidden" name="email" value="{{ new_emailaddress.email }}">
+    </form>
+  {% endif %}
+{% endblock content %}

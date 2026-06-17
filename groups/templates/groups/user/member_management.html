@@ -1,0 +1,62 @@
+{% extends "player_base.html" %}
+{% load static %}
+
+{% block css_files %}
+{% endblock css_files %}
+
+{% block page_title %}Group | Manage Members{% endblock page_title %}
+
+{% block player_content %}
+{% include "groups/includes/_setting_tabs.html" with active_tab="member-management" %}
+
+<div class="row justify-content-center">
+    <div class="col-11 col-lg-11">
+        <div class="card border-0 shadow-lg rounded-4 bg-white">
+            <div class="card-body p-4">
+            <!--All members of the group -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="table-responsive rounded-3">
+                    <table class="table table-hover align-middle text-nowrap">
+                        <thead class="table-light">
+                            <tr class="text-center">
+                                <th scope="col" style="width: 50px;">Select</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Joined At</th>
+                                <th scope="col">Leader</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for gm in group_members %}
+                            <tr class="text-center">
+                                <td>  
+                                    <input class="form-check-input" type="checkbox" value="{{gm.id}}" id="checkDefault" name="selected-members">
+                                </td>
+                                <td>{{gm.member.profile_username}}</td>
+                                <td>{{gm.joined_at}}</td>
+                                <td>
+                                    {% if gm.is_leader %}
+                                        <i class="bi bi-check-lg" style="color: green;"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-grid justify-content-center gap-3 mt-4 border-top pt-4">
+                    <button class="btn btn-outline-danger shadow-sm px-4 w-100" formaction="{% url 'delete-member' %}" type="submit">
+                        <i class="bi bi-trash"></i> Delete Selected
+                    </button>
+                    <button class="btn btn-outline-warning shadow-sm px-4 w-100" formaction="{% url 'promote-member' %}" type="submit">
+                        <i class="bi bi-star"></i> Promote to Leader
+                    </button>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock player_content %}

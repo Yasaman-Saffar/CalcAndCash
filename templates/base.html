@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "bootstrap/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="{% static "bootstrap/icons/bootstrap-icons.min.css" %}">
+    <link rel="stylesheet" href="{% static "base.css" %}">
+    {% block css_files %}{% endblock css_files %}
+    
+    <title>{% block page_title %}{% endblock page_title %}</title>
+
+</head>
+
+<body>
+    <!--Navbar-->  
+    {% block personal_navbar %}
+        {% include "includes/default_navbar.html" %}
+    {% endblock personal_navbar %}
+    
+    {% block navbar %}{% endblock navbar %}
+
+    <div class="fixed-top w-100 d-flex justify-content-center" style="z-index: 9999; pointer-events: none;">
+        <div class="mt-4" style="pointer-events: auto;">
+             {% include "includes/messages.html" %}
+        </div>
+    </div>
+
+
+    <!-- Confirmation Modal -->
+    {% include "includes/modal.html" %}
+    <!-- Notification(Toast) -->
+    <div id="notif-toast" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    {% block page_content %}{% endblock page_content %}
+
+    <script src="{% static "bootstrap/bootstrap.bundle.min.js" %}"></script>
+
+    <script>
+        window.USER = {
+            is_superuser: {{ request.user.is_superuser|yesno:"true,false" }},
+        };
+    </script>
+    <script src="{% static "js/messages_alert.js" %}"></script>
+    <script src="{% static "js/modal.js" %}"></script>
+    <script src="{% static "js/tooltip.js" %}"></script>
+    <script type="module" src="{% static 'realtime/js/main.js' %}"></script>
+
+    {% block page_scripts %}{% endblock page_scripts %}
+    
+</body>
+</html>

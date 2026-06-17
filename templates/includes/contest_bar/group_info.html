@@ -1,0 +1,22 @@
+{% if request.user.profile.group %}
+    <div class="bg-black border border-secondary rounded-3 p-3 text-white">
+        
+        <div class="d-flex align-items-center gap-2 fw-semibold mb-2 pb-2 border-bottom border-secondary">
+            <i class="bi bi-people text-info"></i>
+            <span class="text-truncate">{{ request.user.profile.group }}</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center small mt-2">
+            <span class="text-white-50 d-lg-none"><i class="bi bi-coin me-1"></i></span>
+            <span class="text-white-50 d-none d-lg-inline"><i class="bi bi-coin me-1"></i> Balance</span>
+            <strong class="text-success">{{ request.user.profile.group.group_account.bank_balance }}</strong>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center small mt-2">
+            <span class="text-white-50 d-lg-none"><i class="bi bi-bag-check me-1"></i></span>
+            <span class="text-white-50 d-none d-lg-inline"><i class="bi bi-bag-check me-1"></i> Items</span>
+            <strong>{{ request.user.profile.group.group_account.all_items_amounts }}</strong>
+        </div>
+
+    </div>
+{% endif %}

@@ -1,0 +1,85 @@
+{% extends "account/base_account_settings.html" %}
+{% load i18n widget_tweaks %}
+
+{% block head_title %}{% trans "Change Phone" %}{% endblock %}
+
+{% block settings_tabs %}
+    {% include "dashboard/includes/_profile_tabs.html" with active_tab="phone" %}
+{% endblock settings_tabs %}
+
+{% block content %}
+
+<div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% trans "Phone Number" %}</h1>
+    <div class="text-muted small">
+        {% trans "Manage and change your phone number." %}
+    </div>
+</div>
+
+<form method="post"
+      action="{% url 'account_change_phone' %}"
+      class="vstack gap-3">
+
+    {% csrf_token %}
+
+    {% if phone %}
+        <div>
+            <label class="form-label small fw-semibold text-secondary mb-1">
+                {% trans "Current Phone" %}
+            </label>
+
+            <input type="tel"
+                   class="form-control rounded-4"
+                   value="{{ phone }}"
+                   disabled>
+
+            {% if not phone_verified %}
+                <div class="alert alert-warning rounded-4 mt-2 mb-0 small">
+                    {% trans "Your phone number is not verified yet." %}
+
+                    <div class="mt-2">
+                        <button form="verify-phone"
+                                type="submit"
+                                class="btn btn-outline-primary rounded-4 btn-sm">
+                            {% trans "Re-send Verification" %}
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div>
+        <label class="form-label small fw-semibold text-secondary mb-1">
+            {% trans "Change To" %}
+        </label>
+
+        {% render_field form.phone class+="form-control rounded-4" %}
+
+        {% if form.phone.errors %}
+            <div class="invalid-feedback d-block">
+                {{ form.phone.errors|striptags }}
+            </div>
+        {% endif %}
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary rounded-4 fw-semibold w-100">
+        {% trans "Change Phone" %}
+    </button>
+
+</form>
+
+{% if not phone_verified %}
+<form id="verify-phone"
+      method="post"
+      action="{% url 'account_change_phone' %}"
+      style="display:none">
+
+    {% csrf_token %}
+    <input type="hidden" name="action" value="verify">
+
+</form>
+{% endif %}
+
+{% endblock %}

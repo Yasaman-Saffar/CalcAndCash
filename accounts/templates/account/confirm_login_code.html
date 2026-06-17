@@ -1,0 +1,79 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n widget_tweaks %}
+
+{% block head_title %}{% translate "Sign In" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% translate "Enter Sign-In Code" %}</h1>
+    <div class="text-muted small">
+      {% translate "Enter the code we sent to you." %}
+    </div>
+  </div>
+
+  <div class="alert alert-info rounded-4 small text-center">
+    {% translate "Is this not your phone number?" %}<br>
+    <a href="{% url 'account_cancel_login_code' %}?next=code" class="fw-semibold text-decoration-none">
+      Change {{ phone }}
+    </a>
+  </div>
+
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger rounded-4">
+      {{ form.non_field_errors }}
+    </div>
+  {% endif %}
+
+  {% url 'account_confirm_login_code' as action_url %}
+  <form method="post" action="{{ action_url }}" class="vstack gap-3">
+    {% csrf_token %}
+
+    {% for field in form %}
+      <div>
+        <label class="form-label small fw-semibold text-secondary mb-1" for="{{ field.id_for_label }}">
+          {{ field.label }}
+        </label>
+        {% render_field field class+="form-control rounded-4 text-center" autocomplete="one-time-code" %}
+        {% if field.errors %}
+          <div class="invalid-feedback d-block">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    <!--OTP Expiry-->
+    <div id="code-timer" class="text-center text-muted mb-3"></div>
+
+    {{ redirect_field }}
+
+    <button type="submit" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% translate "Sign In" %}
+    </button>
+    <a href="{% url 'account_cancel_login_code' %}" class="btn btn-secondary rounded-4 fw-semibold w-100">
+      {% translate "Login With Password" %}
+    </a>
+  </form>
+{% endblock content %}
+
+{% block account_scripts %}
+  <script>
+  (function() {
+      let remaining = {{code_remaining}};
+      const timerEl = document.getElementById("code-timer");
+
+      function updateTimer() {
+          const m = Math.floor(remaining / 60).toString().padStart(2, "0");
+          const s = (remaining % 60).toString().padStart(2, "0");
+          timerEl.textContent = `OTP Expiry: ${m}:${s}`;
+
+          if (remaining <= 0) {
+              window.location.href = "{% url 'account_request_login_code' %}";
+              return;
+          }
+          remaining--;
+          setTimeout(updateTimer, 1000);
+      }
+
+      updateTimer();
+  })();
+  </script>
+{% endblock account_scripts %}

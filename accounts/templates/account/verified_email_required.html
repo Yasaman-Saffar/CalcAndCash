@@ -1,0 +1,47 @@
+{% extends "account/base_accounts.html" %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your Email Address" %}{% endblock head_title %}
+
+{% block content %}
+  <div class="text-center mb-4">
+    <div class="mb-3">
+      <span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning"
+            style="width: 72px; height: 72px;">
+        <i class="bi bi-envelope-exclamation fs-2"></i>
+      </span>
+    </div>
+
+    <h1 class="h4 fw-bold mb-1">{% trans "Verify Your Email Address" %}</h1>
+    <div class="text-muted small">{% trans "Email verification is required to continue." %}</div>
+  </div>
+
+  {% url 'account_email' as email_url %}
+
+  <div class="alert alert-warning rounded-4 small">
+    {% blocktrans %}
+      This part of the site requires us to verify that you are who you claim to be.
+      For this purpose, we require that you verify ownership of your email address.
+    {% endblocktrans %}
+  </div>
+
+  <p class="text-muted small">
+    {% blocktrans %}
+      We have sent an email to you for verification. Please click on the link inside that email.
+      If you do not see the verification email in your main inbox, check your spam folder.
+      Otherwise contact us if you do not receive it within a few minutes.
+    {% endblocktrans %}
+  </p>
+
+  <div class="text-center mt-3">
+    <a href="{{ email_url }}" class="btn btn-primary rounded-4 fw-semibold w-100">
+      {% trans "Change Email Address" %}
+    </a>
+  </div>
+
+  <p class="text-muted small text-center mt-3 mb-0">
+    {% blocktrans %}
+      You can still change your email address.
+    {% endblocktrans %}
+  </p>
+{% endblock content %}

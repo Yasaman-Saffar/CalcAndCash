@@ -1,0 +1,86 @@
+<!-- lg navbar-->
+<nav class="navbar navbar-dark bg-dark d-flex d-lg-none px-2 sticky-top">
+  <div class="container-fluid">
+
+    <!-- Inflation -->
+    <div class="d-flex flex-column">
+      <div class="small">
+        {% include "includes/timer.html" %}
+      </div>
+      <div class="small text-white-50">
+        Inflation: <strong>{{ current_inflation|default:"0" }}%</strong>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="d-flex align-items-center gap-2">
+
+      <div class="dropdown">
+        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          Menu
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+
+          <li class="d-flex justify-content-center gap-2 px-3">
+            <a class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" data-bs-title="Leaderbord"
+            href="{% url "leaderboard" %}">
+            <i class="bi bi-list-ol"></i>
+            </a>
+
+            <a class="btn btn-sm btn-outline-warning position-relative" href="{% url "group-notifs" %}">
+            <i class="bi bi-bell"></i>
+            {% if has_unread_group_notifications %}
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            {% endif %}
+            </a>
+
+            {% if request.user.profile.memberships.is_leader %}
+            <a class="btn btn-sm btn-outline-secondary" href="{% url "group-settings" %}">
+                <i class="bi bi-gear"></i>
+            </a>
+            {% endif %}
+
+            <a class="btn btn-sm btn-outline-light" data-bs-toggle="tooltip" data-bs-title="Bank"
+            href="{% url "bank-marketplace" %}">
+            <i class="bi bi-bank"></i>
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item" href="{% url 'group-dashboard' %}">
+              <i class="bi bi-speedometer2 me-1"></i> Dashboard
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{% url 'group-dashboard' %}">
+              <i class="bi bi-question-circle me-1"></i> Questions
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{% url 'group-items' %}">
+              <i class="bi bi-box-seam me-1"></i> Items
+            </a>
+          </li>
+
+        </ul>
+      </div>
+
+
+      <!-- Group Info -->
+      <div class="dropdown">
+        <button class="btn btn-outline-info btn-sm" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="bi bi-people"></i>
+        </button>
+
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+          <li class="d-flex justify-content-center gap-2">
+            {% include "includes/contest_bar/group_info.html" %}
+          </li>
+        </ul>
+      </div>
+      
+
+  </div>
+</nav>

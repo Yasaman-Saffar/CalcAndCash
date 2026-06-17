@@ -1,0 +1,30 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-sm bg-dark border-bottom py-2 sticky-top">
+  <div class="container-fluid">
+
+    {# Left side: Timer #}
+    <div class="d-flex align-items-center gap-2">
+      {% include "includes/timer.html" %}
+    </div>
+
+    {# Right side: Inflation pill #}
+    <div class="ms-auto d-flex align-items-center">
+      <span id="inflation-value"
+            class="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill text-light small bg-black border border-secondary">
+        <i class="bi bi-graph-up"></i>
+        <span class="text-light">Current Inflation:</span>
+        <strong class="text-primary">{{ current_inflation|default:"0" }}%</strong>
+      </span>
+    </div>
+
+  </div>
+</nav>
+
+<script>
+  window.USER = {
+    is_superuser: {{ request.user.is_superuser|yesno:"true,false" }},
+  };
+</script>
+
+<script type="module" src="{% static 'includes/js/main.js' %}"></script>

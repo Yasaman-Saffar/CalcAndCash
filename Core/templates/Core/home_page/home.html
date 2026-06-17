@@ -1,0 +1,269 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css_files %}
+    <link rel="stylesheet" href="{% static "Core/style.css" %}">
+{% endblock css_files %}
+
+{% block page_title %}Welcome{% endblock page_title %}
+
+{% block personal_navbar %}{% endblock personal_navbar %}
+{% block navbar %}{% endblock navbar %}
+
+{% block page_content %}
+
+<div class="container py-5">
+    <div class="mx-auto" style="max-width: 1100px;">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <span class="badge bg-success-subtle text-success rounded-pill px-3 mb-2">
+                Contest Introduction
+            </span>
+            <h1 class="fw-bold mb-2">
+                Welcome to CALC AND CASH
+            </h1>
+            <p class="text-muted mb-0">
+                A team-based contest about strategy, math, trading, and smart financial decisions.
+            </p>
+        </div>
+
+        <a href="#start-section" class="btn btn-light border fw-semibold rounded-4 px-4">
+            Skip
+        </a>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero-card p-4 p-md-5 mb-5 bg-warning-subtle border border-secondary border-opacity-25 rounded-4 shadow">
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-lg-6">
+                <h2 class="fw-bold mb-3">
+                    Build your team, solve questions, trade assets, and win.
+                </h2>
+
+                <p class="text-muted mb-4">
+                    Each team starts with 1000 points. Use your points to buy questions and items,
+                    earn rewards by solving challenges, and grow your final Total Asset.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="#rules-section" class="btn btn-primary fw-semibold rounded-4 px-4">
+                        Read Rules
+                    </a>
+                    <a href="#start-section" class="btn btn-outline-secondary fw-semibold rounded-4 px-4">
+                        Start Now
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <img src="{% static 'images/contest_banner.png' %}"
+                     class="img-fluid rounded-4 shadow-sm"
+                     alt="Calc and Cash Contest">
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Steps -->
+    <div class="text-center mb-4">
+        <h3 class="fw-bold mb-2">How It Works</h3>
+        <p class="text-muted mb-0">Join the contest in a few simple steps.</p>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="welcome-box h-100 border-start border-2 border-primary border-opacity-25">
+                <div class="icon-wrap text-primary">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Create a Team</h5>
+                <p class="text-muted small mb-0">
+                    Players can create a team. The creator automatically becomes the team leader.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="welcome-box h-100 border-start border-2 border-success border-opacity-25">
+                <div class="icon-wrap text-success">
+                    <i class="bi bi-envelope-plus"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Invite Members</h5>
+                <p class="text-muted small mb-0">
+                    Leaders can invite users. Invited users can accept requests from their messages.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="welcome-box h-100 border-start border-2 border-warning border-opacity-25">
+                <div class="icon-wrap text-warning">
+                    <i class="bi bi-question-diamond"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Solve & Trade</h5>
+                <p class="text-muted small mb-0">
+                    Buy questions, solve them for rewards, or trade questions with other teams.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="welcome-box h-100 border-start border-2 border-danger border-opacity-25">
+                <div class="icon-wrap text-danger">
+                    <i class="bi bi-trophy"></i>
+                </div>
+                <h5 class="fw-bold mb-2">Highest Asset Wins</h5>
+                <p class="text-muted small mb-0">
+                    The team with the highest Total Asset at the end becomes the winner.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Details -->
+    <div class="soft-section p-4 p-md-5 mb-5 bg-primary-subtle rounded-4 border border-info-subtle">
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-lg-5">
+                <img src="{% static 'images/gameplay.png' %}"
+                     class="img-fluid rounded-4 shadow"
+                     alt="Gameplay explanation">
+            </div>
+
+            <div class="col-12 col-lg-7">
+                <span class="badge bg-warning-subtle text-warning rounded-pill px-3 mb-2">
+                    Gameplay
+                </span>
+
+                <h3 class="fw-bold mb-3">
+                    Points, items, inflation, and bank interest
+                </h3>
+
+                <p class="text-muted">
+                    Teams use their initial points to buy questions and items. Correct answers give more points
+                    than the cost of the question.
+                </p>
+
+                <p class="text-muted mb-0">
+                    Teams can also buy and sell items with the bank. Items prices may change because of positive
+                    or negative inflation. Inflation times are hidden, but bank interest is applied at known intervals.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rules -->
+    <div id="rules-section" class="card bg-body-tertiary border-0 shadow-sm rounded-4 p-4 p-md-5 mb-5">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+            <div>
+                <h3 class="fw-bold mb-1">Contest Rules</h3>
+                <p class="text-muted small mb-0">A quick overview of the most important rules.</p>
+            </div>
+        </div>
+
+        <div class="accordion" id="rulesAccordion">
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="ruleOneHeading">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#ruleOne" aria-expanded="true" aria-controls="ruleOne">
+                        Team Access
+                    </button>
+                </h2>
+                <div id="ruleOne" class="accordion-collapse collapse show"
+                     aria-labelledby="ruleOneHeading" data-bs-parent="#rulesAccordion">
+
+                    <div class="accordion-body text-muted">
+                        The team creator becomes the leader. The leader can invite members, and accepted members
+                        can access the team dashboard. Leadership can be transferred to another member.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="ruleTwoHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#ruleTwo" aria-expanded="false" aria-controls="ruleTwo">
+                        Questions and Items
+                    </button>
+                </h2>
+                <div id="ruleTwo" class="accordion-collapse collapse"
+                     aria-labelledby="ruleTwoHeading" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body text-muted">
+                        Each team starts with 1000 points and can spend them on questions and items.
+                        Solving questions correctly increases the team's points.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="ruleThreeHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#ruleThree" aria-expanded="false" aria-controls="ruleThree">
+                        Trading and Verification
+                    </button>
+                </h2>
+                <div id="ruleThree" class="accordion-collapse collapse"
+                     aria-labelledby="ruleThreeHeading" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body text-muted">
+                        Teams may trade unsolved questions with other teams. The price is agreed by both sides.
+                        A one-time code is sent only to team leaders through messages to confirm the trade.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="ruleFourHeading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#ruleFour" aria-expanded="false" aria-controls="ruleFour">
+                        Winner and Contest Time
+                    </button>
+                </h2>
+                <div id="ruleFour" class="accordion-collapse collapse"
+                     aria-labelledby="ruleFourHeading" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body text-muted">
+                        The final score is called Total Asset. It is calculated from the team's bank balance
+                        and the current value of its items. The team with the highest Total Asset wins.
+                        If needed, access to contest pages may be temporarily restricted.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Start Section -->
+    <div id="start-section" class="card border-0 shadow rounded-4 p-4 p-md-5 text-center">
+        {% if not request.user.is_authenticated %}
+            <h3 class="fw-bold mb-2">Ready to enter the contest?</h3>
+            <p class="text-muted mb-4">Create your account or login to continue.</p>
+            <div class="d-flex justify-content-center flex-wrap gap-2">
+                <a class="btn btn-danger fw-semibold rounded-4 px-4"
+                   href="{% url 'account_signup' %}">
+                    Start Competition
+                </a>
+
+                <a class="btn btn-warning border fw-semibold rounded-4 px-4"
+                   href="{% url 'account_login' %}">
+                    Login
+                </a>
+            </div>
+        {% else %}
+            <h3 class="fw-bold mb-2">Back to the contest?</h3>
+            <p class="text-muted mb-4">Let's go!</p>
+            <div class="d-flex justify-content-center flex-wrap gap-2">
+                <a class="btn btn-danger fw-bold fw-semibold rounded-4 px-4 w-25"
+                href="{% url 'dashboard' %}">
+                    Dashboard
+
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+</div>
+
+{% endblock page_content %}
+
+{% block page_scripts %}{% endblock page_scripts %}

@@ -1,0 +1,223 @@
+{% extends "staff_base.html" %}
+{% load static %}
+
+{% block css_files %}{% endblock css_files %}
+
+{% block page_title %}Group | {{ account.group.name }}{% endblock page_title %}
+
+{% block staff_content %}
+<div class="container py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 fw-bold mb-1">{{ account.group.name }}</h1>
+            <p class="text-muted small mb-0">Group detail and activity overview.</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Group Info -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-2 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4 d-flex flex-column" style="max-height: 520px;">
+                    <h5 class="fw-bold mb-3">Group Info</h5>
+
+                    <div class="flex-grow-1 overflow-auto">
+                        <div class="mb-3">
+                            <div class="text-muted small">Bank Balance</div>
+                            <div class="fw-semibold">{{ account.bank_balance }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small">Items Amount</div>
+                            <div class="fw-semibold">{{ account.all_items_amounts }}</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="text-muted small">Total Assets</div>
+                            <div class="fw-semibold">{{ account.total_assets }}</div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <div class="fw-semibold mb-2">Leaders</div>
+                            {% if leaders %}
+                                <ul class="list-unstyled mb-0">
+                                    {% for l in leaders %}
+                                        <li class="text-muted">{{ l.profile_username }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-muted small">No leaders found.</div>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <div class="fw-semibold mb-2">Members</div>
+                            {% if members %}
+                                <ul class="list-unstyled mb-0">
+                                    {% for m in members %}
+                                        <li class="text-muted">{{ m.profile_username }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="text-muted small">No members found.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Solved Questions -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-2 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4 d-flex flex-column" style="max-height: 520px;">
+                    <h5 class="fw-bold mb-3">Solved Questions</h5>
+
+                    <div class="flex-grow-1 overflow-auto">
+                        {% if s_questions %}
+                            <div class="list-group list-group-flush">
+                                {% for sq in s_questions %}
+                                    <div class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+                                        <div class="text-start">
+                                            <div class="fw-bold">#{{ sq.question.number }}</div>
+                                            <div class="text-muted small">{{ sq.question.difficulty }}</div>
+                                        </div>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-info rounded-pill flex-shrink-0"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#questionModal"
+                                                data-qnumber="{{ sq.question.number }}"
+                                                data-qdifficulty="{{ sq.question.difficulty }}"
+                                                data-qprompt="{{ sq.question.question_prompt }}"
+                                                data-qanswer="{{ sq.question.answer }}"
+                                                data-ganswer="{{ sq.group_answer }}">
+                                            Details
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-muted small">
+                                "{{ account.group.name }}" hasn't solved any question yet.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Unsolved Questions -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-2 shadow-sm rounded-4 h-100">
+                <div class="card-body p-4 d-flex flex-column" style="max-height: 520px;">
+                    <h5 class="fw-bold mb-3">Unsolved Questions</h5>
+
+                    <div class="flex-grow-1 overflow-auto">
+                        {% if uns_questions %}
+                            <div class="list-group list-group-flush">
+                                {% for unsq in uns_questions %}
+                                    <div class="list-group-item px-0 d-flex justify-content-between align-items-center gap-2">
+                                        <div class="text-start">
+                                            <div class="fw-bold">#{{ unsq.question.number }}</div>
+                                            <div class="text-muted small">{{ unsq.question.difficulty }}</div>
+                                        </div>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-info rounded-pill flex-shrink-0"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#questionModal"
+                                                data-qnumber="{{ unsq.question.number }}"
+                                                data-qdifficulty="{{ unsq.question.difficulty }}"
+                                                data-qprompt="{{ unsq.question.question_prompt }}"
+                                                data-qanswer="{{ unsq.question.answer }}"
+                                                data-ganswer="{{ unsq.group_answer }}">
+                                            Details
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-muted small">
+                                "{{ account.group.name }}" doesn't have any unsolved question.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="col-12">
+            <div class="card border-2 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Items</h5>
+
+                    <div style="max-height: 260px; overflow-y: auto; overflow-x: hidden;" class="pe-2">
+                        {% if items %}
+                            <div class="row g-3">
+                                {% for i in items %}
+                                    <div class="col-12 col-md-6 col-xl-4">
+                                        <div class="border rounded-4 p-3 h-100 d-flex gap-3 align-items-center">
+                                            {% if i.item.photo %}
+                                                <img src="{{ i.item.photo.url }}"
+                                                    class="rounded-3 object-fit-cover flex-shrink-0"
+                                                    style="width: 72px; height: 72px;"
+                                                    alt="{{ i.item.name }}">
+                                            {% else %}
+                                                <div class="bg-light rounded-3 flex-shrink-0 d-flex align-items-center justify-content-center"
+                                                    style="width: 72px; height: 72px;">
+                                                    <i class="bi bi-image text-muted"></i>
+                                                </div>
+                                            {% endif %}
+
+                                            <div class="text-start">
+                                                <div class="fw-bold">{{ i.item.name }}</div>
+                                                <div class="text-muted small">Current Price: {{ i.item.current_price }}</div>
+                                                <div class="text-muted small">
+                                                    Bought For: {{ i.paid_amount }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-muted small">No items found for this group.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Questions Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content rounded-4">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 fw-bold" id="modal-title"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Prompt:</strong> <span id="modal-prompt"></span></p>
+        <p><strong>Answer:</strong> <span id="modal-answer"></span></p>
+        <p><strong>Group Answer:</strong> <span id="modal-groupAnswer"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock staff_content %}
+
+{% block staff_scripts %}
+    <script src="{% static "groups/js/staff/group_details.js" %}"></script>
+{% endblock staff_scripts %}

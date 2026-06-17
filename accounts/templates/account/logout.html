@@ -1,0 +1,41 @@
+{% extends "account/base_accounts.html" %}
+{% load allauth i18n %}
+
+{% block head_title %}{% trans "Sign Out" %}{% endblock head_title %}
+
+{% block personal_navbar %}
+    {% include "includes/default_navbar.html" %}
+{% endblock personal_navbar %}
+
+{% block content %}
+
+  <div class="text-center mb-4">
+    <h1 class="h4 fw-bold mb-1">{% trans "Sign Out" %}</h1>
+    <div class="text-muted small">{% trans "You are about to end your session." %}</div>
+  </div>
+
+  <div class="alert alert-warning rounded-4 mb-3" role="alert">
+    {% trans "Are you sure you want to sign out?" %}
+  </div>
+
+  {% url 'account_logout' as action_url %}
+  {% element form method="post" action=action_url no_visible_fields=True %}
+    {% slot body %}
+      {% csrf_token %}
+      {{ redirect_field }}
+    {% endslot %}
+
+    {% slot actions %}
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-danger rounded-4 fw-semibold">
+          {% trans "Sign Out" %}
+        </button>
+
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary rounded-4">
+          {% trans "Cancel" %}
+        </a>
+      </div>
+    {% endslot %}
+  {% endelement %}
+
+{% endblock content %}
