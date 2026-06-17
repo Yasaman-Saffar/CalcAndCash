@@ -21,21 +21,53 @@
   {% endif %}
 
   <form method="post" action="{% url 'account_verify_phone' %}" class="vstack gap-3">
-    {% csrf_token %}
+      {% csrf_token %}
 
-    {% if form.code %}
-      <div>
-        {% render_field form.code class+="form-control rounded-4 text-center" inputmode="numeric" autocomplete="one-time-code" %}
-        {% if form.code.errors %}
-          <div class="invalid-feedback d-block">{{ form.code.errors|striptags }}</div>
-        {% endif %}
-      </div>
-    {% endif %}
+      {% if form.code %}
+        <div>
+          {% render_field form.code class+="form-control rounded-4 text-center" inputmode="numeric" autocomplete="one-time-code" %}
+          {% if form.code.errors %}
+            <div class="invalid-feedback d-block">{{ form.code.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
 
-    {{ redirect_field }}
+      <!--OTP Expiry-->
+      <div id="code-timer" class="text-center text-muted mb-3"></div>
 
-    <button type="submit" class="btn btn-primary rounded-4 fw-semibold w-100">
-      {% translate "Confirm Phone" %}
-    </button>
+      {{ redirect_field }}
+
+      <button type="submit" id="confirm-btn" class="btn btn-primary rounded-4 fw-semibold w-100">
+        {% translate "Confirm Phone" %}
+      </button>
   </form>
+
+  <div class="text-center mt-3">
+    <a href="{% url 'account_cancel_verify_phone' %}" class="text-muted text-decoration-none small">
+      {% translate "Cancel" %}
+    </a>
+  </div>
 {% endblock content %}
+
+{% block page_scripts %}
+<script>
+(function() {
+    let remaining = {{ code_remaining }};
+    const timerEl = document.getElementById("code-timer");
+
+    function updateTimer() {
+        if (remaining <= 0) {
+            timerEl.textContent = "";
+            return;
+        }
+        const m = Math.floor(remaining / 60).toString().padStart(2, "0");
+        const s = (remaining % 60).toString().padStart(2, "0");
+        timerEl.textContent = `{% translate "Code expires in" %} ${m}:${s}`;
+        remaining--;
+        setTimeout(updateTimer, 1000);
+    }
+
+    updateTimer();
+})();
+</script>
+{% endblock page_scripts %}

@@ -7,8 +7,11 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from allauth.account.views import SignupView
+from allauth.account import app_settings
 from allauth.account.stages import LoginByCodeStage, LoginStageController
 from allauth.account.views import ConfirmLoginCodeView as BaseConfirmLoginCodeView
+from allauth.account.views import _VerifyPhoneSignupView, _VerifyPhoneChangeView
+from allauth.account.stages import PhoneVerificationStage
 
 from .models import Profile
 
@@ -54,6 +57,39 @@ class ConfirmLoginCodeView(BaseConfirmLoginCodeView):
         return ret
 
 confirm_login_code = ConfirmLoginCodeView.as_view()
+
+class VerifyPhoneSignupView(_VerifyPhoneSignupView):
+    def get_context_data(self, **kwargs):
+        ret = super().get_context_data(**kwargs)
+        sent_at = self.process.state.get("at", 0)
+        timeout = settings.ACCOUNT_PHONE_VERIFICATION_TIMEOUT
+        elapsed = int(time.time() - sent_at)
+        ret["code_remaining"] = max(0, timeout - elapsed)
+        return ret
+
+class VerifyPhoneChangeView(_VerifyPhoneChangeView):
+    def get_context_data(self, **kwargs):
+        ret = super().get_context_data(**kwargs)
+        sent_at = self.process.state.get("at", 0)
+        timeout = settings.ACCOUNT_PHONE_VERIFICATION_TIMEOUT
+        elapsed = int(time.time() - sent_at)
+        ret["code_remaining"] = max(0, timeout - elapsed)
+        return ret
+
+def verify_phone(request):
+    if request.user.is_authenticated:
+        return VerifyPhoneChangeView.as_view()(request)
+    return VerifyPhoneSignupView.as_view()(request)
+
+class CancelVerifyPhoneView(View):
+    def get(self, request, *args, **kwargs):
+        # print("hiiiiiiiii")
+        stage = LoginStageController.enter(request, PhoneVerificationStage.key)
+        # print("STAGE:", stage)
+        # print("SESSION KEYS:", list(request.session.keys()))
+        if stage:
+            stage.abort()
+        return HttpResponseRedirect(reverse("account_login"))
 
 class CancelLoginCodeView(View):
     def get(self, request, *args, **kwargs):
