@@ -80,7 +80,7 @@ class GroupActions(models.TextChoices):
     BUY_QUESTION = "buy_question", "Buy question"
     SOLVE_QUESTION = "solve_question", "Solve question"
     TRADE_QUESTION_SELL = "trade_question_sell", "Trade question-Sold"
-    TRADE_QUESTION_BUYER = "trade_question_buyer", "Trade question-Bought"
+    TRADE_QUESTION_BUYER = "trade_question_buy", "Trade question-Bought"
     BUY_ITEM = "buy_item", "Buy item"
     SELL_ITEM = "sell_item", "Sell item"
 

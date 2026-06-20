@@ -145,12 +145,12 @@ class TradeQuestionsView(PermissionRequiredMixin, CreateView):
             )
             log_group_activity(
                 group=group,
-                action="trade_question_seller",
+                action="trade_question_sell",
                 message=f"+{tf.consensual_price}π | {self.request.user.profile.profile_username} sold #{tf.question.number}-{tf.question.level} to {tf.buyer.group.name}."
             )
             log_group_activity(
                 group=obj.buyer.group,
-                action="trade_question_buyer",
+                action="trade_question_buy",
                 message=f"-{tf.consensual_price}π | You bought #{tf.question.number}-{tf.question.level} from {tf.seller.group.name}."
             )
             
