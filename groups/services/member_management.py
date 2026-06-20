@@ -14,7 +14,13 @@ class MemberManagement:
     @staticmethod
     def search_user(q, leader):
         group = leader.profile.group
-        profiles = Profile.objects.filter(profile_username__icontains=q)[:10]
+        profiles = Profile.objects.filter(
+            profile_username__icontains=q,
+            user__is_staff=False
+            ).exclude(
+                user=leader
+            )[:10]
+
         results = [
             {
                 'id': p.id,
