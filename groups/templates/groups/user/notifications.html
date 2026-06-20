@@ -13,15 +13,16 @@
         <div class="mx-auto bg-primary rounded-pill mt-3" style="width:70px;height:4px;"></div>
     </div>
 
-    {% if notifications %}
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-9">
-                
-                {% for n in notifications %}
-                    <div class="accordion mb-3 shadow-sm rounded-4 overflow-hidden border-0" id="accordion_{{forloop.counter}}">
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed py-3 px-4 read_message_btn"
+        <div class="col-12 col-lg-9" id="g-notifications-list">
+            {% if notifications %}
+                    
+                    {% for n in notifications %}
+                        <div class="accordion mb-3 shadow-sm rounded-4 overflow-hidden border-0" id="accordion_{{forloop.counter}}">
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header">
+                                    <button 
+                                        class="accordion-button collapsed py-3 px-4 read_message_btn"
                                         data-read="{{n.is_read|yesno:'1,0'}}"
                                         data-id="{{n.id}}"
                                         data-csrf="{{csrf_token}}"
@@ -31,86 +32,85 @@
                                         aria-expanded="false"
                                         aria-controls="collapse_notif_page{{forloop.counter}}">
 
-                                    <div class="d-flex align-items-center justify-content-between w-100 me-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <!-- Unread Dot using Bootstrap Badge -->
-                                            {% if not n.is_read %}
-                                                <span class="p-1 bg-danger border border-light rounded-circle" title="Unread">
-                                                    <span class="visually-hidden">New</span>
-                                                </span>
-                                            {% endif %}
-                                            <span class="fw-semibold text-dark">{{n.header}}</span>
-                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between w-100 me-3">
+                                            <div class="d-flex align-items-center gap-3">
+                                                <!-- Unread Dot using Bootstrap Badge -->
+                                                {% if not n.is_read %}
+                                                    <span class="p-1 bg-danger border border-light rounded-circle" title="Unread">
+                                                        <span class="visually-hidden">New</span>
+                                                    </span>
+                                                {% endif %}
+                                                <span class="fw-semibold text-dark">{{n.header}}</span>
+                                            </div>
 
-                                        <!-- Time display -->
-                                        {% with t=n.created_at|timesince %}
-                                            <small class="text-muted text-nowrap ms-2">
-                                                {% if t == "0 minutes" %}
+                                            <!-- Time display -->
+                                            <small class="text-muted flex-shrink-0">
+                                                {% if n.created_at|timesince|slice:":1" == "0" %}
                                                     Just now
                                                 {% else %}
-                                                    {{ t }} ago
+                                                    {{ n.created_at|timesince }} ago
                                                 {% endif %}
                                             </small>
-                                        {% endwith %}
-                                    </div>
-                                </button>
-                            </h2>
+                                        </div>
+                                    </button>
+                                </h2>
 
-                            <div id="collapse_notif_page{{forloop.counter}}" class="accordion-collapse collapse" data-bs-parent="#notification-list-page">
-                                <div class="accordion-body bg-light-subtle px-4 py-3 text-secondary" style="line-height: 1.6;">
-                                    {{n.message}}
+                                <div id="collapse_notif_page{{forloop.counter}}" class="accordion-collapse collapse" data-bs-parent="#notification-list-page">
+                                    <div class="accordion-body bg-light-subtle px-4 py-3 text-secondary" style="line-height: 1.6;">
+                                        {{n.message}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
 
-                <!-- Pagination (Modern Style) -->
-                <nav aria-label="Notifications pagination" class="mt-5">
-                    <ul class="pagination justify-content-center border-0">
-                        {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ page_obj.previous_page_number }}">
-                                    <i class="bi bi-chevron-left"></i>
-                                </a>
-                            </li>
-                        {% endif %}
 
-                        {% for num in paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <li class="page-item active">
-                                    <span class="page-link border-0 shadow-sm rounded-3 mx-1 bg-primary">{{ num }}</span>
-                                </li>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <!-- Pagination (Modern Style) -->
+                    <nav aria-label="Notifications pagination" class="mt-5">
+                        <ul class="pagination justify-content-center border-0">
+                            {% if page_obj.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ num }}">{{ num }}</a>
+                                    <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
                                 </li>
                             {% endif %}
-                        {% endfor %}
 
-                        {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ page_obj.next_page_number }}">
-                                    <i class="bi bi-chevron-right"></i>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                            {% for num in paginator.page_range %}
+                                {% if page_obj.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link border-0 shadow-sm rounded-3 mx-1 bg-primary">{{ num }}</span>
+                                    </li>
+                                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
 
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link border-0 shadow-sm rounded-3 mx-1 text-dark" href="?page={{ page_obj.next_page_number }}">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+            {% else %}
+                <!-- Empty State using Bootstrap Classes -->
+            <div id="empty-group-notifications">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body text-center p-5">
+                        <i class="bi bi-bell text-muted display-4"></i>
+                        <h4 class="fw-bold mt-3 mb-2 text-dark">No notifications yet</h4>
+                        <p class="text-muted mb-0">We'll notify you when something important happens in your group.</p>
+                    </div>
+                </div>
             </div>
+            {% endif %}
         </div>
-
-    {% else %}
-        <!-- Empty State using Bootstrap Classes -->
-        <div class="text-center py-5 mt-4">
-            <div class="bg-light d-inline-flex align-items-center justify-content-center rounded-circle mb-4" style="width: 100px; height: 100px;">
-                <i class="bi bi-bell-slash text-muted display-4"></i>
-            </div>
-            <h4 class="fw-bold text-dark">No notifications yet</h4>
-            <p class="text-muted mx-auto" style="max-width: 300px;">We'll notify you when something important happens in your group.</p>
         </div>
-    {% endif %}
 </div>
 {% endblock player_content %}
 

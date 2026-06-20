@@ -6,6 +6,9 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
     """
     
     async def connect(self):
+        self.group_name = None
+        self.players_group_name = None
+
         self.user = self.scope['user']
         
         if self.user.is_anonymous:
@@ -50,6 +53,10 @@ class LeaderboardConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
         
+    async def disconnect(self, close_code):  # این نداشتی
+        await self.channel_layer.group_discard("leaderboard_group", self.channel_name)
+
+        
     async def update_leaderboard(self, event):
         await self.send_json(event["data"])
         
@@ -60,6 +67,10 @@ class ContestConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        
+    async def disconnect(self, close_code):
+            await self.channel_layer.group_discard("contest_users", self.channel_name)
+
         
     async def force_refresh(self, event):
         await self.send_json({
@@ -73,6 +84,10 @@ class EventConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
         await self.accept()
+        
+    async def disconnect(self, close_code):  # این نداشتی
+        await self.channel_layer.group_discard("inflation_group", self.channel_name)
+
         
     async def inflation_announcement(self, event):
         await self.send_json({"current_inflation": event["data"]})

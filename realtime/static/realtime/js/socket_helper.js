@@ -28,4 +28,5 @@ export function createSocket(url, onMessage) {
     }
 
     connect();
+    return socket;
 }

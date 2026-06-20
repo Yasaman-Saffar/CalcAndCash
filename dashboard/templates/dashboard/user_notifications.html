@@ -18,73 +18,74 @@
         <div class="mx-auto bg-primary rounded-pill mt-3" style="width: 60px; height: 4px;"></div>
     </div>
 
-    {% if notifications %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-lg-10 col-xl-8">
+    <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-8" id="notifications-list">
 
-                {% for n in notifications %}
-                    <div class="accordion mb-3 shadow rounded-4 overflow-hidden" id="accordion_{{ forloop.counter }}">
-                        <div class="accordion-item border-0">
-                            <h2 class="accordion-header">
-                                <button
-                                    class="accordion-button collapsed read_message_btn py-3 px-4"
-                                    data-read="{{ n.is_read|yesno:'1,0' }}"
-                                    data-id="{{ n.id }}"
-                                    data-csrf="{{ csrf_token }}"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#collapse_notif_personal{{ forloop.counter }}"
-                                    aria-expanded="false"
-                                    aria-controls="collapse_notif_personal{{ forloop.counter }}"
-                                >
-                                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between w-100 gap-2 pe-3">
-                                        <div class="d-flex align-items-center gap-2 min-w-0">
-                                            {% if not n.is_read %}
-                                                <span class="badge rounded-pill bg-danger p-2"></span>
-                                            {% endif %}
-                                            <strong class="text-truncate">{{ n.header }}</strong>
-                                        </div>
-
-                                        {% with t=n.created_at|timesince %}
-                                            <small class="text-muted flex-shrink-0">
-                                                {% if t == "0 minutes" %}
-                                                    Just now
-                                                {% else %}
-                                                    {{ t }} ago
-                                                {% endif %}
-                                            </small>
-                                        {% endwith %}
-                                    </div>
-                                </button>
-                            </h2>
-
-                            <div id="collapse_notif_personal{{ forloop.counter }}" class="accordion-collapse collapse">
-                                <div class="accordion-body px-4 py-3">
-                                    <div class="text-secondary">
-                                        {{ n.message }}
+        {% if notifications %}
+            {% for n in notifications %}
+                <div class="accordion mb-3 shadow rounded-4 overflow-hidden" id="accordion_{{ forloop.counter }}">
+                    <div class="accordion-item border-0">
+                        <h2 class="accordion-header">
+                            <button
+                                class="accordion-button collapsed read_message_btn py-3 px-4"
+                                data-read="{{ n.is_read|yesno:'1,0' }}"
+                                data-id="{{ n.id }}"
+                                data-csrf="{{ csrf_token }}"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse_notif_personal{{ forloop.counter }}"
+                                aria-expanded="false"
+                                aria-controls="collapse_notif_personal{{ forloop.counter }}">
+                                
+                                <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between w-100 gap-2 pe-3">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <!-- Unread Dot using Bootstrap Badge -->
+                                        {% if not n.is_read %}
+                                            <span class="p-1 bg-danger border border-light rounded-circle" title="Unread">
+                                                <span class="visually-hidden">New</span>
+                                            </span>
+                                        {% endif %}
+                                        <span class="fw-semibold text-dark">{{n.header}}</span>
                                     </div>
 
-                                    {% if n.context == 'invitation' %}
-                                        <hr class="my-3">
-                                        <form method="post"
-                                              action="{% url "user-invitation-response" %}"
-                                              class="d-flex flex-column flex-sm-row gap-2">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="notification_id" value="{{ n.id }}">
-
-                                            <button class="btn btn-success rounded-3 px-4" type="submit" name="action" value="accept">
-                                                <i class="bi bi-check2-circle me-1"></i> Accept
-                                            </button>
-                                            <button class="btn btn-outline-danger rounded-3 px-4" type="submit" name="action" value="reject">
-                                                <i class="bi bi-x-circle me-1"></i> Reject
-                                            </button>
-                                        </form>
-                                    {% endif %}
+                                    <small class="text-muted flex-shrink-0">
+                                        {% if n.created_at|timesince|slice:":1" == "0" %}
+                                            Just now
+                                        {% else %}
+                                            {{ n.created_at|timesince }} ago
+                                        {% endif %}
+                                    </small>
                                 </div>
+                            </button>
+                        </h2>
+
+                        <div id="collapse_notif_personal{{ forloop.counter }}" class="accordion-collapse collapse">
+                            <div class="accordion-body px-4 py-3">
+                                <div class="text-secondary">
+                                    {{ n.message }}
+                                </div>
+
+                                {% if n.context == 'invitation' %}
+                                    <hr class="my-3">
+                                    <form method="post"
+                                            action="{% url "user-invitation-response" %}"
+                                            class="d-flex flex-column flex-sm-row gap-2">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="notification_id" value="{{ n.id }}">
+
+                                        <button class="btn btn-success rounded-3 px-4" type="submit" name="action" value="accept">
+                                            <i class="bi bi-check2-circle me-1"></i> Accept
+                                        </button>
+                                        <button class="btn btn-outline-danger rounded-3 px-4" type="submit" name="action" value="reject">
+                                            <i class="bi bi-x-circle me-1"></i> Reject
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
+            {% endfor %}
 
                 <!-- Pagination -->
                 <div class="d-flex justify-content-center mt-4">
@@ -123,11 +124,8 @@
                     </nav>
                 </div>
 
-            </div>
-        </div>
-    {% else %}
-        <div class="row justify-content-center">
-            <div class="col-12 col-md-8 col-xl-6">
+        {% else %}
+            <div id="empty-user-notifications">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body text-center p-5">
                         <i class="bi bi-bell display-4 text-muted"></i>
@@ -136,8 +134,9 @@
                     </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
+    </div>
 </div>
 {% endblock page_content %}
 
