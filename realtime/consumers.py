@@ -53,7 +53,7 @@ class LeaderboardConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
         
-    async def disconnect(self, close_code):  # این نداشتی
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard("leaderboard_group", self.channel_name)
 
         
@@ -85,7 +85,7 @@ class EventConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
         
-    async def disconnect(self, close_code):  # این نداشتی
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard("inflation_group", self.channel_name)
 
         
