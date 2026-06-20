@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% load static %}
 
 {% block css_files %}
-    <link rel="stylesheet" href="{% static "groups/create.css" %}">
+    <link rel="stylesheet" href="{% static 'groups/create.css' %}">
 {% endblock css_files %}
 
 {% block page_title %}New Group{% endblock page_title %}

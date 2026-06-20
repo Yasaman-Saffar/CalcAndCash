@@ -311,7 +311,7 @@ class GroupItems(PermissionRequiredMixin, View):
                                                     'search_input': q})
     
 class GroupNotifications(PermissionRequiredMixin, ListView):
-    permission_classes = [IsPlayer, CheckContestState, HasGroup]
+    permission_classes = [IsPlayer, HasGroup]
     model = Notification
     ordering = ['-created_at']
     context_object_name = 'notifications'
