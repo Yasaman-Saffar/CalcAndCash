@@ -8,7 +8,7 @@ function start_otp_timer(btn, timeout){
 
         if(timeout <= 0){
             clearInterval(countdown);
-            btn.innerHTML ="OTP Request";
+            btn.innerHTML ="Request OTP";
             btn.disabled = false;
         }
     }, 1000)

@@ -46,7 +46,7 @@ class OtpProcessor:
         """
         
         try:
-            buyer_account = BankAccount.all_bankAccounts().select_for_update().get(pk=buyer_id)
+            buyer_account = BankAccount.all_bankAccounts().get(pk=buyer_id)
         except BankAccount.DoesNotExist:
             raise GroupDoesNotExist("Buyer group does not exist.")
         
