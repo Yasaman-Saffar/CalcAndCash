@@ -5,9 +5,9 @@ The project originated from an earlier mathematics competition platform and it p
 
 **[Live Demo](https://calcandcash.ir)**
 
----
 
 # Features
+- OTP authentication via SMS
 - Real-time competition management
 - Real-time notifications using WebSockets
 - Live leaderboard updates
@@ -23,7 +23,6 @@ The project originated from an earlier mathematics competition platform and it p
 - Background task processing with Celery
 - Redis-powered messaging and caching
 
----
 
 # Technology Stack
 **Backend**
@@ -33,17 +32,21 @@ The project originated from an earlier mathematics competition platform and it p
 - Celery
 - PostgreSQL
 - Redis
+  
 **Frontend**
 - HTML
 - CSS
 - JavaScript
 - Bootstrap
+  
 **Infrastructure**
 - Daphne (ASGI Server)
 - WebSockets
 - Linux VPS
 
----
+**External Services**
+- SMS Gateway for OTP verification
+
 
 # Architecture
 The project follows a real-time architecture built on Django Channels and Redis.
@@ -54,7 +57,6 @@ The project follows a real-time architecture built on Django Channels and Redis.
 - PostgreSQL stores application data.
 This architecture enables real-time updates for notifications, contests, and leaderboard changes without requiring page refreshes.
 
----
 
 # Installation
 Clone the repository:
@@ -88,13 +90,13 @@ Run the development server:
 python manage.py runserver 8001
 ```
 
----
 
 # Environment Variables
 Create a .env file in the project root and configure the required settings:
 ```bash
 SECRET_KEY=
 DEBUG=
+ALLOWED_HOSTS=
 
 DB_NAME=
 DB_USER=
@@ -102,14 +104,16 @@ DB_PASSWORD=
 DB_HOST=
 DB_PORT=
 
+SMS_API_URL=
+SMS_FROM_NUMBER=
+
 CELERY_BROKER_URL=
 CELERY_RESULT_BACKEND=
 
 REDIS_OTP_URL=
 CHANNEL_REDIS_URL=
+CACHE_REDIS_URL=
 ```
-
----
 
 # Running Background Services
 Start Celery Worker:
@@ -125,8 +129,3 @@ Start Daphne:
 daphne Core.asgi:application
 --port 8000
 ```
-
----
-
-# Project Goals
-The main goal of CalcAndCash is to combine mathematics, economics, and competition into a single interactive platform where users can improve analytical thinking and decision-making skills while participating in real-time events.
