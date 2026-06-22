@@ -321,9 +321,9 @@ class GroupNotifications(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return (
             super().get_queryset()
-            .filter(
-                Q(type='group', user=self.request.user.profile) |
-                Q(type='contest'),
-                is_active=True)
+            .filter(Q(type='group') | Q(type='contest'),
+                    user=self.request.user.profile,
+                    is_active=True
+            )
             .order_by("-created_at")
         )

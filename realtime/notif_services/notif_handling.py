@@ -19,17 +19,6 @@ class NotifHandling:
                 content_object=content_object)
             
             send_notification_task.delay(user.id, notification.id)  
-                
-    @staticmethod
-    def contest_message(type, context, header, message, content_object):
-        notification = Notification.save_notification(
-            type=type,
-            context=context,
-            header=header,
-            message=message,
-            content_object=content_object)
-
-        send_all_notification_task.delay(notification.id)
     
     @staticmethod
     def mark_as_read(id):
