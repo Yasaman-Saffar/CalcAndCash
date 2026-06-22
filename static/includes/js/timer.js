@@ -47,7 +47,7 @@ function startTicker() {
             remainingTime = 0;
             stopTicker();
             renderTimer(remainingTime);
-            // fetchTimerData();
+            fetchTimerData();
         } else {
             renderTimer(remainingTime);
         }
