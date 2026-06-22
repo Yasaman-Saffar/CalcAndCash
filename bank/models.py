@@ -196,7 +196,7 @@ class ItemTransaction(models.Model):
     account = models.ForeignKey(BankAccount, on_delete=models.CASCADE, related_name='account_item_trans')
     item = models.ForeignKey(GroupItem, on_delete=models.CASCADE, related_name='account_item_trans')
     action = models.CharField(max_length=10, choices=ItemAction.choices, default=ItemAction.BUY)
-    inflation_round = models.ForeignKey("Event", on_delete=models.CASCADE)
+    inflation_round = models.ForeignKey("Event", on_delete=models.CASCADE, null=True)
     action_time = models.DateTimeField(auto_now_add=True)
     paid_amount = models.DecimalField(max_digits=12, decimal_places=2)
     

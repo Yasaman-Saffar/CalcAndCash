@@ -4,6 +4,7 @@ from bank.models import BankAccount, Item, GroupItem
 from realtime.notif_services.notif_handling import NotifHandling
 from realtime.services import inflation_announcement
 from timer.models import TimeControl
+from accounts.models import Profile
 
 class EconomyEngine:
     """
@@ -108,9 +109,11 @@ class EconomyEngine:
             
         
     def _notify_players(self, type, context, header, message, event):
-        NotifHandling.contest_message(
+        users = Profile.objects.filter(user__is_staff=False)
+        NotifHandling.notify_message(
             type=type,
             context=context,
+            users=users,
             header=header,
             message=message,
             content_object=event

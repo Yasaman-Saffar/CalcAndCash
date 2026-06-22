@@ -119,6 +119,7 @@ class TransactionProcessor:
     def receive_question_reward(self, group_question):
         price = group_question.question.difficulty.level_reward_price
         self._credit_money(price)
+        self.account.update_total_assets()
     
     @transaction.atomic    
     def trade_question(self, trade_form, gquestion_id):
