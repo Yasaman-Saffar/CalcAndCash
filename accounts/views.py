@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf import settings
 from allauth.account.views import SignupView
-from allauth.account import app_settings
 from allauth.account.stages import LoginByCodeStage, LoginStageController
 from allauth.account.views import ConfirmLoginCodeView as BaseConfirmLoginCodeView
 from allauth.account.views import _VerifyPhoneSignupView, _VerifyPhoneChangeView
@@ -15,14 +14,18 @@ from allauth.account.stages import PhoneVerificationStage
 
 from .models import Profile
 
-class PlayerSignupView(SignupView):
-    template_name = "account/signup.html"
-    
 class StaffSignupView(SignupView):
     template_name = "account/signup.html"
 
     def dispatch(self, request, *args, **kwargs):
-        request.is_staff_signup = True
+        request.session["is_staff_signup"] = True
+        return super().dispatch(request, *args, **kwargs)
+    
+class PlayerSignupView(SignupView):
+    template_name = "account/signup.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        request.session["is_staff_signup"] = False
         return super().dispatch(request, *args, **kwargs)
     
 class CompleteInformation(UpdateView):

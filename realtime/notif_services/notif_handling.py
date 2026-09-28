@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from ..tasks import send_notification_task, send_all_notification_task
+from ..tasks import send_notification_task
 from ..models import Notification
 
 class NotifHandling:

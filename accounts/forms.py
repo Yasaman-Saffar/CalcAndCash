@@ -8,9 +8,10 @@ class CustomSignupForm(SignupForm):
     def save(self, request):
         user = super().save(request)
         
-        if getattr(request, "is_staff_signup", False):
+        if request.session.get("is_staff_signup", False):
             user.is_staff = True
             user.save()
+            request.session["is_staff_signup"] = False  # پاک کن بعد از استفاده
 
         return user
 

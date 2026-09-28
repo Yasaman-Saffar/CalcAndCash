@@ -21,7 +21,11 @@
     {% blocktranslate %}Already have an account? Then please <a class="link-primary fw-semibold text-decoration-none" href="{{ login_url }}">sign in</a>.{% endblocktranslate %}
   </p>
 
-  {% url 'account_signup' as action_url %}
+  {% if request.resolver_match.url_name == 'account_staff_signup' %}
+    {% url 'account_staff_signup' as action_url %}
+  {% else %}
+    {% url 'account_signup' as action_url %}
+  {% endif %}
   <form method="post" action="{{ action_url }}" class="vstack gap-3">
     {% csrf_token %}
 
